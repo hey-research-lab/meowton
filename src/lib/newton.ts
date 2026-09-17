@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { type CoatId, writeStoredCoat } from "@/lib/cats";
 
 export type NewtonPhase = "ignorant" | "falling" | "bonk" | "awake";
 
@@ -14,8 +15,10 @@ type NewtonState = {
   hint: string;
   caught: number;
   reduced: boolean;
+  coat: CoatId;
   setPhase: (phase: NewtonPhase) => void;
   addCatch: () => void;
+  setCoat: (coat: CoatId) => void;
   reset: (reduced: boolean) => void;
 };
 
@@ -24,8 +27,13 @@ export const useNewton = create<NewtonState>((set) => ({
   hint: HINT.ignorant,
   caught: 0,
   reduced: false,
+  coat: "ginger",
   setPhase: (phase) => set({ phase, hint: HINT[phase] }),
   addCatch: () => set((s) => ({ caught: s.caught + 1 })),
+  setCoat: (coat) => {
+    writeStoredCoat(coat);
+    set({ coat });
+  },
   reset: (reduced) =>
     set({
       reduced,

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { CAT_SLOTS, getCoat, type CatSlot, type Coat } from "@/lib/cats";
 import { onOrchardTap, useNewton } from "@/lib/newton";
 import { generateOrchard, meshOrchard } from "@/lib/voxel-world";
 
@@ -44,8 +45,10 @@ type BoxDef = {
   w: number;
   h: number;
   d: number;
-  color: number;
+  slot: CatSlot;
 };
+
+type CatMatMap = Map<CatSlot, InstanceType<Three["MeshLambertMaterial"]>>;
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -54,12 +57,13 @@ function prefersReducedMotion() {
 function box(
   THREE: Three,
   def: BoxDef,
-  materials: Map<number, InstanceType<Three["MeshLambertMaterial"]>>,
+  materials: CatMatMap,
+  coat: Coat,
 ) {
-  let mat = materials.get(def.color);
+  let mat = materials.get(def.slot);
   if (!mat) {
-    mat = new THREE.MeshLambertMaterial({ color: def.color });
-    materials.set(def.color, mat);
+    mat = new THREE.MeshLambertMaterial({ color: coat[def.slot] });
+    materials.set(def.slot, mat);
   }
   const geo = new THREE.BoxGeometry(def.w, def.h, def.d);
   const mesh = new THREE.Mesh(geo, mat);
@@ -69,46 +73,43 @@ function box(
   return mesh;
 }
 
-function buildCat(
-  THREE: Three,
-  materials: Map<number, InstanceType<Three["MeshLambertMaterial"]>>,
-) {
+function paintCat(materials: CatMatMap, coat: Coat) {
+  for (const slot of CAT_SLOTS) {
+    const mat = materials.get(slot);
+    if (mat) mat.color.setHex(coat[slot]);
+  }
+}
+
+function buildCat(THREE: Three, materials: CatMatMap, coat: Coat) {
   const group = new THREE.Group();
-  const GINGER = 0xf4a12c;
-  const STRIPE = 0xc56a1a;
-  const BELLY = 0xfff3d1;
-  const WHITE = 0xf9fffe;
-  const INK = 0x1d1d21;
-  const NOSE = 0xb02e26;
-  const LIME = 0x80c71f;
   const parts: BoxDef[] = [
-    { x: 0.02, y: 0.36, z: 0, w: 0.78, h: 0.44, d: 0.5, color: GINGER },
-    { x: 0.08, y: 0.3, z: 0, w: 0.5, h: 0.28, d: 0.36, color: BELLY },
-    { x: 0.0, y: 0.52, z: 0, w: 0.62, h: 0.1, d: 0.54, color: STRIPE },
-    { x: -0.12, y: 0.4, z: 0, w: 0.18, h: 0.28, d: 0.54, color: STRIPE },
-    { x: 0.42, y: 0.78, z: 0, w: 0.46, h: 0.42, d: 0.44, color: GINGER },
-    { x: 0.42, y: 0.7, z: 0, w: 0.5, h: 0.22, d: 0.48, color: STRIPE },
-    { x: 0.32, y: 1.04, z: -0.14, w: 0.14, h: 0.2, d: 0.12, color: GINGER },
-    { x: 0.32, y: 1.04, z: 0.14, w: 0.14, h: 0.2, d: 0.12, color: GINGER },
-    { x: 0.34, y: 1.06, z: -0.14, w: 0.08, h: 0.12, d: 0.06, color: BELLY },
-    { x: 0.34, y: 1.06, z: 0.14, w: 0.08, h: 0.12, d: 0.06, color: BELLY },
-    { x: 0.62, y: 0.7, z: 0, w: 0.2, h: 0.16, d: 0.28, color: WHITE },
-    { x: 0.72, y: 0.7, z: 0, w: 0.08, h: 0.08, d: 0.1, color: NOSE },
-    { x: 0.58, y: 0.86, z: -0.12, w: 0.08, h: 0.08, d: 0.08, color: WHITE },
-    { x: 0.58, y: 0.86, z: 0.12, w: 0.08, h: 0.08, d: 0.08, color: WHITE },
-    { x: 0.62, y: 0.86, z: -0.12, w: 0.05, h: 0.05, d: 0.05, color: LIME },
-    { x: 0.62, y: 0.86, z: 0.12, w: 0.05, h: 0.05, d: 0.05, color: LIME },
-    { x: 0.64, y: 0.86, z: -0.12, w: 0.03, h: 0.03, d: 0.03, color: INK },
-    { x: 0.64, y: 0.86, z: 0.12, w: 0.03, h: 0.03, d: 0.03, color: INK },
-    { x: 0.28, y: 0.12, z: -0.16, w: 0.2, h: 0.16, d: 0.16, color: WHITE },
-    { x: 0.28, y: 0.12, z: 0.16, w: 0.2, h: 0.16, d: 0.16, color: WHITE },
-    { x: -0.28, y: 0.14, z: -0.16, w: 0.22, h: 0.18, d: 0.18, color: GINGER },
-    { x: -0.28, y: 0.14, z: 0.16, w: 0.22, h: 0.18, d: 0.18, color: GINGER },
-    { x: -0.48, y: 0.42, z: 0.02, w: 0.18, h: 0.16, d: 0.16, color: STRIPE },
-    { x: -0.62, y: 0.58, z: 0.08, w: 0.16, h: 0.14, d: 0.14, color: GINGER },
-    { x: -0.72, y: 0.74, z: 0.16, w: 0.14, h: 0.12, d: 0.12, color: STRIPE },
+    { x: 0.02, y: 0.36, z: 0, w: 0.78, h: 0.44, d: 0.5, slot: "fur" },
+    { x: 0.08, y: 0.3, z: 0, w: 0.5, h: 0.28, d: 0.36, slot: "belly" },
+    { x: 0.0, y: 0.52, z: 0, w: 0.62, h: 0.1, d: 0.54, slot: "stripe" },
+    { x: -0.12, y: 0.4, z: 0, w: 0.18, h: 0.28, d: 0.54, slot: "stripe" },
+    { x: 0.42, y: 0.78, z: 0, w: 0.46, h: 0.42, d: 0.44, slot: "fur" },
+    { x: 0.42, y: 0.7, z: 0, w: 0.5, h: 0.22, d: 0.48, slot: "stripe" },
+    { x: 0.32, y: 1.04, z: -0.14, w: 0.14, h: 0.2, d: 0.12, slot: "fur" },
+    { x: 0.32, y: 1.04, z: 0.14, w: 0.14, h: 0.2, d: 0.12, slot: "fur" },
+    { x: 0.34, y: 1.06, z: -0.14, w: 0.08, h: 0.12, d: 0.06, slot: "belly" },
+    { x: 0.34, y: 1.06, z: 0.14, w: 0.08, h: 0.12, d: 0.06, slot: "belly" },
+    { x: 0.62, y: 0.7, z: 0, w: 0.2, h: 0.16, d: 0.28, slot: "muzzle" },
+    { x: 0.72, y: 0.7, z: 0, w: 0.08, h: 0.08, d: 0.1, slot: "nose" },
+    { x: 0.58, y: 0.86, z: -0.12, w: 0.08, h: 0.08, d: 0.08, slot: "muzzle" },
+    { x: 0.58, y: 0.86, z: 0.12, w: 0.08, h: 0.08, d: 0.08, slot: "muzzle" },
+    { x: 0.62, y: 0.86, z: -0.12, w: 0.05, h: 0.05, d: 0.05, slot: "eyes" },
+    { x: 0.62, y: 0.86, z: 0.12, w: 0.05, h: 0.05, d: 0.05, slot: "eyes" },
+    { x: 0.64, y: 0.86, z: -0.12, w: 0.03, h: 0.03, d: 0.03, slot: "ink" },
+    { x: 0.64, y: 0.86, z: 0.12, w: 0.03, h: 0.03, d: 0.03, slot: "ink" },
+    { x: 0.28, y: 0.12, z: -0.16, w: 0.2, h: 0.16, d: 0.16, slot: "muzzle" },
+    { x: 0.28, y: 0.12, z: 0.16, w: 0.2, h: 0.16, d: 0.16, slot: "muzzle" },
+    { x: -0.28, y: 0.14, z: -0.16, w: 0.22, h: 0.18, d: 0.18, slot: "fur" },
+    { x: -0.28, y: 0.14, z: 0.16, w: 0.22, h: 0.18, d: 0.18, slot: "fur" },
+    { x: -0.48, y: 0.42, z: 0.02, w: 0.18, h: 0.16, d: 0.16, slot: "stripe" },
+    { x: -0.62, y: 0.58, z: 0.08, w: 0.16, h: 0.14, d: 0.14, slot: "fur" },
+    { x: -0.72, y: 0.74, z: 0.16, w: 0.14, h: 0.12, d: 0.12, slot: "stripe" },
   ];
-  for (const part of parts) group.add(box(THREE, part, materials));
+  for (const part of parts) group.add(box(THREE, part, materials, coat));
   return group;
 }
 
@@ -209,10 +210,16 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   const terrain = meshOrchard(THREE, orchard.blocks);
   scene.add(terrain);
 
-  const catMats = new Map<number, InstanceType<Three["MeshLambertMaterial"]>>();
-  const cat = buildCat(THREE, catMats);
+  const catMats: CatMatMap = new Map();
+  const cat = buildCat(THREE, catMats, getCoat(useNewton.getState().coat));
   cat.position.set(orchard.cat.x, orchard.cat.y, orchard.cat.z);
   scene.add(cat);
+  let lastCoat = useNewton.getState().coat;
+  const unCoat = useNewton.subscribe((state) => {
+    if (state.coat === lastCoat) return;
+    lastCoat = state.coat;
+    paintCat(catMats, getCoat(state.coat));
+  });
 
   const appleGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4);
   const appleMat = new THREE.MeshLambertMaterial({ color: 0xb02e26 });
@@ -598,6 +605,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     window.removeEventListener("keydown", onKey);
     window.removeEventListener("pointermove", onMove);
     unTap();
+    unCoat();
     terrain.geometry.dispose();
     (terrain.material as InstanceType<Three["Material"]>).dispose();
     appleGeo.dispose();

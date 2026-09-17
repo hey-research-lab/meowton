@@ -29,17 +29,19 @@ function Home() {
 
   return (
     <section className="hero">
-      <p className="hero-kicker">{SITE.pair}</p>
-      <h1 className="hero-title">
-        The apple falls.
-        <br />
-        The cat catches.
-      </h1>
-      <p className="hero-lede">
-        Gravity was a rumor until it hit him. {SITE.ticker} is paired with
-        tokenized $AAPL on {SITE.pad.name} — not a USD pair. This orchard
-        still reads the print.
-      </p>
+      <div className="hero-copy">
+        <p className="hero-kicker">{SITE.pair}</p>
+        <h1 className="hero-title">
+          The apple falls.
+          <br />
+          The cat catches.
+        </h1>
+        <p className="hero-lede">
+          Gravity was a rumor until it hit him. {SITE.ticker} is paired with
+          tokenized $AAPL on {SITE.pad.name} — not a USD pair. This orchard
+          still reads the print.
+        </p>
+      </div>
       <dl className="live-strip" aria-label="Live AAPL print">
         <div>
           <dt>Live · AAPL print</dt>
@@ -61,10 +63,12 @@ function Home() {
           </dd>
         </div>
       </dl>
-      <p className="hero-hint" data-phase={phase}>
-        {hint}
-      </p>
-      <LegalFoot home />
+      <div className="hero-meta">
+        <p className="hero-hint" data-phase={phase}>
+          {hint}
+        </p>
+        <LegalFoot home />
+      </div>
       <div className="pair-marquee" aria-hidden="true">
         <div className="pair-track">
           {[0, 1].map((copy) => (

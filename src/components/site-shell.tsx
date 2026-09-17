@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { CatPicker } from "@/components/cat-picker";
 import { OrchardScene } from "@/components/orchard-scene";
 import { requestOrchardTap } from "@/lib/newton";
 import { useAapl } from "@/lib/use-aapl";
@@ -25,8 +26,9 @@ function Chrome() {
 
   return (
     <header className="site-chrome">
-      <div className="chrome-bar">
-        <div className="hud-row" aria-label="Live feed">
+      <div className="chrome-stack">
+        <div className="chrome-bar">
+          <div className="hud-row" aria-label="Live feed">
           <Link to="/" className="font-medium text-ink no-underline">
             {SITE.pair}
           </Link>
@@ -91,6 +93,8 @@ function Chrome() {
             </span>
           )}
         </nav>
+        </div>
+        <CatPicker />
       </div>
     </header>
   );
