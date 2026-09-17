@@ -1,10 +1,12 @@
 export const SITE = {
   name: "MEOWTON",
   ticker: "$MEOWTON",
+  pair: "$MEOWTON × $AAPL",
   tagline: "The apple falls. The cat catches.",
   field:
     "Not the first cat on AAPL. The bet is the hook: external stock-oracle direction, asymmetric fees. Unaudited. Not a payout.",
-  domain: "meowton.xyz",
+  domain: "meowton.lol",
+  url: "https://meowton.lol",
   xHandle: null as string | null,
   launchAt: null as number | null,
   chainId: 4663,
@@ -21,6 +23,31 @@ export const SITE = {
   staleSec: 15 * 60,
   feedDecimals: 8,
   feedName: "Robinhood AAPL / USD",
+  pad: {
+    name: "LONG",
+    operator: "Long Inc.",
+    address: "1013 Centre Road, Suite 403-B, Wilmington, DE 19805",
+    app: "https://app.long.xyz",
+    terms: "https://app.long.xyz/terms",
+    privacy: "https://app.long.xyz/privacy",
+    create: "https://app.long.xyz",
+    termsEffective: "8 September 2026",
+    contact: "info@long.xyz",
+    factory: "0x22e99278308b393ea1260859b181ad7e78f5eeed",
+    airlock: "0xeb7c034704ef8dcd2d32324c1545f62fb4ad0862",
+    hook: "0x4e3468951d49f2eea976ed0d6e75ffcb44a9a544",
+  },
+  listing: {
+    name: "MEOWTON",
+    ticker: "MEOWTON",
+    quote: "AAPL",
+    supply: "1,000,000,000",
+    communityMode: true,
+    image: "/x/logo.png",
+    website: "https://meowton.lol",
+    description:
+      "The apple falls. The cat catches. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
+  },
 } as const;
 
 export type FeeMode = "sleep" | "fall" | "rise";
@@ -56,6 +83,11 @@ export const FEE_ORDER: FeeMode[] = ["sleep", "fall", "rise"];
 
 export function explorerAddress(addr: string) {
   return `${SITE.explorer}/address/${addr}`;
+}
+
+export function longTradeUrl(ca: string | null = SITE.tokenCa) {
+  if (!ca) return SITE.pad.app;
+  return `${SITE.pad.app}/tokens/${ca}`;
 }
 
 export function formatBps(bps: number) {

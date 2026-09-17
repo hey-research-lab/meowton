@@ -1,7 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { OrchardScene, requestCatJump } from "@/components/orchard-scene";
+import { OrchardScene } from "@/components/orchard-scene";
+import { requestOrchardTap } from "@/lib/newton";
 import { useAapl } from "@/lib/use-aapl";
-import { formatTMinus, formatUsd, MODE_LABEL, SITE } from "@/lib/site";
+import {
+  formatBps,
+  formatTMinus,
+  formatUsd,
+  longTradeUrl,
+  MODE_LABEL,
+  SITE,
+} from "@/lib/site";
 
 const NAV = [
   { to: "/how", label: "How" },
@@ -13,17 +21,18 @@ function Chrome() {
   const aapl = useAapl();
   const mode = aapl.data?.mode ?? "sleep";
   const price = aapl.data?.price;
+  const trade = SITE.tokenCa ? longTradeUrl(SITE.tokenCa) : null;
 
   return (
     <header className="site-chrome">
       <div className="chrome-bar">
         <div className="hud-row" aria-label="Live feed">
           <Link to="/" className="font-medium text-ink no-underline">
-            {SITE.ticker}
+            {SITE.pair}
           </Link>
           <span className="hud-dot">·</span>
           <span className="tabular-nums">
-            AAPL {price != null ? formatUsd(price) : "—"}
+            {price != null ? formatUsd(price) : "—"}
           </span>
           <span className="hud-dot">·</span>
           <span className="mode-chip" data-mode={mode}>
@@ -31,9 +40,30 @@ function Chrome() {
             {MODE_LABEL[mode]}
           </span>
           <span className="hud-dot">·</span>
-          <span className="tabular-nums">{formatTMinus()}</span>
+          <span className="tabular-nums">
+            {aapl.data
+              ? `${formatBps(aapl.data.buyBps)} / ${formatBps(aapl.data.sellBps)}`
+              : "—"}
+          </span>
+          {SITE.launchAt ? (
+            <>
+              <span className="hud-dot">·</span>
+              <span className="tabular-nums">{formatTMinus()}</span>
+            </>
+          ) : null}
           <span className="hud-dot">·</span>
-          <span>CA pending</span>
+          {trade ? (
+            <a
+              className="hud-trade"
+              href={trade}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Trade
+            </a>
+          ) : (
+            <span>CA pending</span>
+          )}
         </div>
         <nav className="nav-row" aria-label="Site">
           {NAV.map((item) => (
@@ -77,7 +107,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         className={home ? "jump-layer jump-layer-home" : "jump-layer jump-layer-strip"}
         onPointerDown={(event) => {
           event.preventDefault();
-          requestCatJump();
+          requestOrchardTap();
         }}
       />
       <Chrome />
