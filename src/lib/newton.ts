@@ -27,7 +27,7 @@ export const useNewton = create<NewtonState>((set) => ({
   hint: HINT.ignorant,
   caught: 0,
   reduced: false,
-  coat: "ginger",
+  coat: "red",
   setPhase: (phase) => set({ phase, hint: HINT[phase] }),
   addCatch: () => set((s) => ({ caught: s.caught + 1 })),
   setCoat: (coat) => {
