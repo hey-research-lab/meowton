@@ -1,7 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { CatPicker } from "@/components/cat-picker";
+import { LegalFoot } from "@/components/legal-foot";
 import { OrchardScene } from "@/components/orchard-scene";
-import { requestOrchardTap } from "@/lib/newton";
+import { requestOrchardTap, useNewton } from "@/lib/newton";
 import { useAapl } from "@/lib/use-aapl";
 import {
   formatBps,
@@ -29,74 +30,99 @@ function Chrome() {
       <div className="chrome-stack">
         <div className="chrome-bar">
           <div className="hud-row" aria-label="Live feed">
-          <Link to="/" className="font-medium text-ink no-underline">
-            {SITE.pair}
-          </Link>
-          <span className="hud-dot">·</span>
-          <span className="tabular-nums">
-            {price != null ? formatUsd(price) : "—"}
-          </span>
-          <span className="hud-dot">·</span>
-          <span className="mode-chip" data-mode={mode}>
-            <i aria-hidden="true" />
-            {MODE_LABEL[mode]}
-          </span>
-          <span className="hud-dot">·</span>
-          <span className="tabular-nums">
-            {aapl.data
-              ? `${formatBps(aapl.data.buyBps)} / ${formatBps(aapl.data.sellBps)}`
-              : "—"}
-          </span>
-          {SITE.launchAt ? (
-            <>
-              <span className="hud-dot">·</span>
-              <span className="tabular-nums">{formatTMinus()}</span>
-            </>
-          ) : null}
-          <span className="hud-dot">·</span>
-          {trade ? (
-            <a
-              className="hud-trade"
-              href={trade}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Trade
-            </a>
-          ) : (
-            <span>CA pending</span>
-          )}
-        </div>
-        <nav className="nav-row" aria-label="Site">
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="nav-link"
-              activeOptions={{ exact: true }}
-            >
-              {item.label}
+            <Link to="/" className="font-medium text-ink no-underline">
+              {SITE.pair}
             </Link>
-          ))}
-          {SITE.xHandle ? (
-            <a
-              className="nav-link"
-              href={`https://x.com/${SITE.xHandle}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              X
-            </a>
-          ) : (
-            <span className="nav-link nav-link-muted" title="Handle pending">
-              X
+            <span className="hud-dot">·</span>
+            <span className="tabular-nums">
+              {price != null ? formatUsd(price) : "—"}
             </span>
-          )}
-        </nav>
+            <span className="hud-dot">·</span>
+            <span className="mode-chip" data-mode={mode}>
+              <i aria-hidden="true" />
+              {MODE_LABEL[mode]}
+            </span>
+            <span className="hud-dot">·</span>
+            <span className="tabular-nums">
+              {aapl.data
+                ? `${formatBps(aapl.data.buyBps)} / ${formatBps(aapl.data.sellBps)}`
+                : "—"}
+            </span>
+            {SITE.launchAt ? (
+              <>
+                <span className="hud-dot">·</span>
+                <span className="tabular-nums">{formatTMinus()}</span>
+              </>
+            ) : null}
+            <span className="hud-dot">·</span>
+            {trade ? (
+              <a
+                className="hud-trade"
+                href={trade}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Trade
+              </a>
+            ) : (
+              <span>CA pending</span>
+            )}
+          </div>
+          <nav className="nav-row" aria-label="Site">
+            {NAV.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="nav-link"
+                activeOptions={{ exact: true }}
+              >
+                {item.label}
+              </Link>
+            ))}
+            {SITE.xHandle ? (
+              <a
+                className="nav-link"
+                href={`https://x.com/${SITE.xHandle}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                X
+              </a>
+            ) : (
+              <span className="nav-link nav-link-muted" title="Handle pending">
+                X
+              </span>
+            )}
+          </nav>
         </div>
         <CatPicker />
       </div>
     </header>
+  );
+}
+
+function Foot({ home }: { home: boolean }) {
+  const hint = useNewton((s) => s.hint);
+  const phase = useNewton((s) => s.phase);
+  const TitleTag = home ? "h1" : "p";
+
+  return (
+    <footer className="site-foot">
+      <div className="foot-bar">
+        <div className="foot-brand">
+          <TitleTag className="foot-title">{SITE.tagline}</TitleTag>
+          <p className="foot-lede">Gravity was a rumor.</p>
+        </div>
+        <div className="foot-meta">
+          {home ? (
+            <p className="hero-hint" data-phase={phase}>
+              {hint}
+            </p>
+          ) : null}
+          <LegalFoot home />
+        </div>
+      </div>
+    </footer>
   );
 }
 
@@ -116,6 +142,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       />
       <Chrome />
       <div className="pointer-events-none relative z-20">{children}</div>
+      <Foot home={home} />
     </div>
   );
 }
