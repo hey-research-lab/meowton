@@ -1,6 +1,6 @@
 # MEOWTON
 
-**The apple falls. The cat catches.**
+**He required an apple.**
 
 AAPL-eşli memecoin · Robinhood Chain `4663` · launch pad: **LONG** (`app.long.xyz`).
 
@@ -129,7 +129,7 @@ Create formuna birebir. Ticker **harf only** (rakam/boşluk/tire zincir reddeder
 | Image | `public/x/logo.png` (800×800) |
 | Website | https://meowton.lol |
 | X | pending |
-| Description | The apple falls. The cat catches. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc. |
+| Description | He required an apple. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc. |
 
 Yasal:
 

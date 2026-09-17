@@ -87,12 +87,11 @@
     background:
       linear-gradient(
         to bottom,
-        rgb(244 234 216 / 0.9) 0%,
-        rgb(244 234 216 / 0.45) 14%,
-        rgb(244 234 216 / 0.12) 28%,
-        transparent 42%,
-        rgb(244 234 216 / 0.2) 72%,
-        rgb(244 234 216 / 0.72) 100%
+        rgb(244 234 216 / 0.88) 0%,
+        rgb(244 234 216 / 0.28) 12%,
+        transparent 26%,
+        transparent 78%,
+        rgb(244 234 216 / 0.22) 100%
       );
   }
 
@@ -300,20 +299,14 @@
     min-height: 100dvh;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 10.5rem 1.5rem 28vh;
+    justify-content: flex-end;
+    padding: 0 1.25rem calc(1.1rem + env(safe-area-inset-bottom));
     text-align: center;
   }
 
-  @media (min-width: 768px) {
-    .hero {
-      padding-top: 11rem;
-    }
-  }
-
-  .hero-copy {
+  .hero-floor {
     width: min(40rem, 100%);
-    padding: 1.15rem 1.4rem 1.35rem;
+    padding: 1rem 1.25rem 0.85rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: rgb(244 234 216 / 0.92);
@@ -322,7 +315,7 @@
 
   .hero-kicker {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 500;
     letter-spacing: var(--tracking-kicker);
     text-transform: uppercase;
@@ -330,39 +323,36 @@
   }
 
   .hero-title {
-    margin-top: 0.7rem;
-    max-width: 16ch;
-    margin-inline: auto;
+    margin-top: 0.35rem;
     font-family: var(--font-display);
-    font-size: var(--text-hero);
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 3.4rem);
     font-weight: 500;
-    line-height: 1.05;
+    line-height: 1.08;
     letter-spacing: -0.03em;
     color: var(--color-ink);
   }
 
   .hero-lede {
-    margin-top: 0.95rem;
-    margin-inline: auto;
-    max-width: 36ch;
+    margin-top: 0.35rem;
     font-family: var(--font-display);
-    font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.35rem);
+    font-size: clamp(1rem, 0.92rem + 0.4vw, 1.2rem);
     font-style: italic;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1.35;
     color: var(--color-ink-soft);
   }
 
   .live-strip {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.75rem 1.25rem;
-    width: min(34rem, calc(100% - 0.5rem));
-    margin-top: 1.75rem;
-    padding: 0.9rem 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: rgb(244 234 216 / 0.94);
+    gap: 0.5rem 1rem;
+    width: 100%;
+    margin-top: 0.85rem;
+    padding: 0.65rem 0.15rem 0.15rem;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    border-radius: 0;
+    background: transparent;
   }
 
   .live-strip div {
@@ -371,7 +361,7 @@
 
   .live-strip dt {
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 500;
     letter-spacing: var(--tracking-hud);
     text-transform: uppercase;
@@ -379,34 +369,15 @@
   }
 
   .live-strip dd {
-    margin-top: 0.2rem;
+    margin-top: 0.12rem;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-variant-numeric: tabular-nums;
     color: var(--color-ink);
   }
 
-  @media (max-width: 639px) {
-    .live-strip {
-      grid-template-columns: 1fr;
-      text-align: left;
-    }
-  }
-
-  .hero-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.15rem;
-    margin-top: 1.15rem;
-    padding: 0.55rem 1.1rem 0.35rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: rgb(244 234 216 / 0.92);
-  }
-
   .hero-hint {
-    margin-top: 0;
+    margin-top: 0.7rem;
     font-family: var(--font-mono);
     font-size: 0.68rem;
     letter-spacing: var(--tracking-hud);
@@ -420,61 +391,6 @@
 
   .hero-hint[data-phase="awake"] {
     color: var(--color-leaf);
-  }
-
-  .pair-marquee {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-    padding: 0.85rem 0 1.1rem;
-    background: linear-gradient(
-      to top,
-      rgb(244 234 216 / 0.88) 0%,
-      rgb(244 234 216 / 0.35) 70%,
-      transparent 100%
-    );
-    mask-image: none;
-  }
-
-  .pair-track {
-    display: flex;
-    width: max-content;
-    animation: pair-marquee 42s linear infinite;
-  }
-
-  .pair-track p {
-    display: flex;
-    gap: 2.5rem;
-    padding-right: 2.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: var(--tracking-hud);
-    text-transform: uppercase;
-    color: var(--color-ink-soft);
-    white-space: nowrap;
-  }
-
-  .pair-track span {
-    display: inline-flex;
-    align-items: center;
-    gap: 2.5rem;
-  }
-
-  .pair-track span::after {
-    content: "·";
-    color: rgb(28 20 16 / 0.28);
-  }
-
-  @keyframes pair-marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
   }
 
   .paper {

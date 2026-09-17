@@ -7,7 +7,7 @@ import appCss from "../styles.css?url";
 
 const APP_NAME = "MEOWTON";
 const DESCRIPTION =
-  "The apple falls. The cat catches. AAPL-paired memecoin on Robinhood Chain. Unaudited. Not a payout.";
+  "He required an apple. AAPL-paired memecoin on Robinhood Chain. Unaudited. Not a payout.";
 
 export const Route = createRootRoute({
   head: () => ({

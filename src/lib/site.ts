@@ -2,7 +2,7 @@ export const SITE = {
   name: "MEOWTON",
   ticker: "$MEOWTON",
   pair: "$MEOWTON × $AAPL",
-  tagline: "The apple falls. The cat catches.",
+  tagline: "He required an apple.",
   field:
     "Not the first cat on AAPL. The bet is the hook: external stock-oracle direction, asymmetric fees. Unaudited. Not a payout.",
   domain: "meowton.lol",
@@ -46,7 +46,7 @@ export const SITE = {
     image: "/x/logo.png",
     website: "https://meowton.lol",
     description:
-      "The apple falls. The cat catches. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
+      "He required an apple. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
   },
 } as const;
 

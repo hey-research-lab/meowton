@@ -1,6 +1,6 @@
 # MEOWTON
 
-**The apple falls. The cat catches.**
+**He required an apple.**
 
 AAPL-paired memecoin on Robinhood Chain (`4663`). Launch pad: [LONG](https://app.long.xyz).
 The site is live. Token, pool, and basket addresses are not.
