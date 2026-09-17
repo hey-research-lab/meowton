@@ -163,13 +163,16 @@ Kod: [`src/components/orchard-scene.tsx`](../src/components/orchard-scene.tsx) �
 
 | Dosya | Kullanım |
 | --- | --- |
-| `public/x/logo.png` | 800×800 — LONG image |
-| `public/x/banner.jpg` | 1500×500 |
+| `public/x/logo.png` | 800×800 — X profil + LONG image |
+| `public/x/banner.jpg` | 1500×500 — X header |
 | `public/x/cover.jpg` | 1500×600 |
+| `public/x/first-post.jpg` | 1600×900 — ilk post |
 | `public/og.jpg` | 1200×630 |
 | `public/favicon.svg` | Elma + kedi kulağı |
 
 Sahne prosedürel voxel. Sprite tabakası kullanılmıyor.
+
+X kit: [`docs/X.md`](X.md)
 
 ---
 
