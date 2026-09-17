@@ -194,7 +194,7 @@ export function generateOrchard(): OrchardData {
           if (n < 0.16) continue;
           const leaf = n > 0.62 ? BLOCK.LEAF_LIT : BLOCK.LEAF;
           set(tx + dx, y, tz + dz, leaf);
-          if (n > 0.78 && y <= top && dist > 0.9 && dist < radius * 0.85) {
+          if (n > 0.62 && y <= top && dist > 0.85 && dist < radius * 0.95) {
             set(tx + dx, y - 1, tz + dz, BLOCK.APPLE);
             appleSpawns.push(toWorld(tx + dx, y - 1, tz + dz));
           }
@@ -203,14 +203,15 @@ export function generateOrchard(): OrchardData {
     }
   };
 
-  addTree(CX, CZ - 9, 8, 3.2);
-  addTree(CX - 10, CZ - 11, 5, 3);
-  addTree(CX + 11, CZ - 12, 6, 3.2);
+  addTree(CX - 4, CZ - 4, 7, 3.05);
+  addTree(CX + 6, CZ - 5, 6, 2.9);
+  addTree(CX, CZ - 8, 8, 3.2);
+  addTree(CX - 11, CZ - 9, 5, 3);
+  addTree(CX + 12, CZ - 10, 6, 3.2);
   addTree(CX - 16, CZ - 5, 5, 2.8);
   addTree(CX + 16, CZ - 6, 5, 2.8);
-  addTree(CX - 14, CZ - 15, 4, 2.6);
-  addTree(CX + 9, CZ - 16, 5, 2.8);
-  addTree(CX - 6, CZ - 16, 4, 2.4);
+  addTree(CX - 8, CZ - 14, 4, 2.6);
+  addTree(CX + 8, CZ - 15, 5, 2.8);
 
   for (const [bx, bz] of [
     [CX - 16, CZ + 5],

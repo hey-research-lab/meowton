@@ -74,33 +74,39 @@ function buildCat(
   materials: Map<number, InstanceType<Three["MeshLambertMaterial"]>>,
 ) {
   const group = new THREE.Group();
-  const ORANGE = 0xc47a3a;
-  const CREAM = 0xf0d9b8;
-  const INK = 0x1c1410;
-  const APPLE = 0xc41e3a;
-  const WHITE = 0xf7efe2;
+  const GINGER = 0xf4a12c;
+  const STRIPE = 0xc56a1a;
+  const BELLY = 0xfff3d1;
+  const WHITE = 0xf9fffe;
+  const INK = 0x1d1d21;
+  const NOSE = 0xb02e26;
+  const LIME = 0x80c71f;
   const parts: BoxDef[] = [
-    { x: 0.02, y: 0.36, z: 0, w: 0.78, h: 0.44, d: 0.5, color: ORANGE },
-    { x: 0.08, y: 0.3, z: 0, w: 0.5, h: 0.28, d: 0.36, color: CREAM },
-    { x: 0.42, y: 0.78, z: 0, w: 0.46, h: 0.42, d: 0.44, color: CREAM },
-    { x: 0.42, y: 0.7, z: 0, w: 0.5, h: 0.22, d: 0.48, color: ORANGE },
-    { x: 0.32, y: 1.04, z: -0.14, w: 0.14, h: 0.2, d: 0.12, color: ORANGE },
-    { x: 0.32, y: 1.04, z: 0.14, w: 0.14, h: 0.2, d: 0.12, color: ORANGE },
-    { x: 0.34, y: 1.06, z: -0.14, w: 0.08, h: 0.12, d: 0.06, color: CREAM },
-    { x: 0.34, y: 1.06, z: 0.14, w: 0.08, h: 0.12, d: 0.06, color: CREAM },
+    { x: 0.02, y: 0.36, z: 0, w: 0.78, h: 0.44, d: 0.5, color: GINGER },
+    { x: 0.08, y: 0.3, z: 0, w: 0.5, h: 0.28, d: 0.36, color: BELLY },
+    { x: 0.0, y: 0.52, z: 0, w: 0.62, h: 0.1, d: 0.54, color: STRIPE },
+    { x: -0.12, y: 0.4, z: 0, w: 0.18, h: 0.28, d: 0.54, color: STRIPE },
+    { x: 0.42, y: 0.78, z: 0, w: 0.46, h: 0.42, d: 0.44, color: GINGER },
+    { x: 0.42, y: 0.7, z: 0, w: 0.5, h: 0.22, d: 0.48, color: STRIPE },
+    { x: 0.32, y: 1.04, z: -0.14, w: 0.14, h: 0.2, d: 0.12, color: GINGER },
+    { x: 0.32, y: 1.04, z: 0.14, w: 0.14, h: 0.2, d: 0.12, color: GINGER },
+    { x: 0.34, y: 1.06, z: -0.14, w: 0.08, h: 0.12, d: 0.06, color: BELLY },
+    { x: 0.34, y: 1.06, z: 0.14, w: 0.08, h: 0.12, d: 0.06, color: BELLY },
     { x: 0.62, y: 0.7, z: 0, w: 0.2, h: 0.16, d: 0.28, color: WHITE },
-    { x: 0.72, y: 0.7, z: 0, w: 0.08, h: 0.08, d: 0.1, color: APPLE },
+    { x: 0.72, y: 0.7, z: 0, w: 0.08, h: 0.08, d: 0.1, color: NOSE },
     { x: 0.58, y: 0.86, z: -0.12, w: 0.08, h: 0.08, d: 0.08, color: WHITE },
     { x: 0.58, y: 0.86, z: 0.12, w: 0.08, h: 0.08, d: 0.08, color: WHITE },
-    { x: 0.62, y: 0.86, z: -0.12, w: 0.05, h: 0.05, d: 0.05, color: INK },
-    { x: 0.62, y: 0.86, z: 0.12, w: 0.05, h: 0.05, d: 0.05, color: INK },
-    { x: 0.28, y: 0.12, z: -0.16, w: 0.2, h: 0.16, d: 0.16, color: CREAM },
-    { x: 0.28, y: 0.12, z: 0.16, w: 0.2, h: 0.16, d: 0.16, color: CREAM },
-    { x: -0.28, y: 0.14, z: -0.16, w: 0.22, h: 0.18, d: 0.18, color: ORANGE },
-    { x: -0.28, y: 0.14, z: 0.16, w: 0.22, h: 0.18, d: 0.18, color: ORANGE },
-    { x: -0.48, y: 0.42, z: 0.02, w: 0.18, h: 0.16, d: 0.16, color: ORANGE },
-    { x: -0.62, y: 0.58, z: 0.08, w: 0.16, h: 0.14, d: 0.14, color: ORANGE },
-    { x: -0.72, y: 0.74, z: 0.16, w: 0.14, h: 0.12, d: 0.12, color: CREAM },
+    { x: 0.62, y: 0.86, z: -0.12, w: 0.05, h: 0.05, d: 0.05, color: LIME },
+    { x: 0.62, y: 0.86, z: 0.12, w: 0.05, h: 0.05, d: 0.05, color: LIME },
+    { x: 0.64, y: 0.86, z: -0.12, w: 0.03, h: 0.03, d: 0.03, color: INK },
+    { x: 0.64, y: 0.86, z: 0.12, w: 0.03, h: 0.03, d: 0.03, color: INK },
+    { x: 0.28, y: 0.12, z: -0.16, w: 0.2, h: 0.16, d: 0.16, color: WHITE },
+    { x: 0.28, y: 0.12, z: 0.16, w: 0.2, h: 0.16, d: 0.16, color: WHITE },
+    { x: -0.28, y: 0.14, z: -0.16, w: 0.22, h: 0.18, d: 0.18, color: GINGER },
+    { x: -0.28, y: 0.14, z: 0.16, w: 0.22, h: 0.18, d: 0.18, color: GINGER },
+    { x: -0.48, y: 0.42, z: 0.02, w: 0.18, h: 0.16, d: 0.16, color: STRIPE },
+    { x: -0.62, y: 0.58, z: 0.08, w: 0.16, h: 0.14, d: 0.14, color: GINGER },
+    { x: -0.72, y: 0.74, z: 0.16, w: 0.14, h: 0.12, d: 0.12, color: STRIPE },
   ];
   for (const part of parts) group.add(box(THREE, part, materials));
   return group;
@@ -177,9 +183,9 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf4ead8);
-  scene.fog = new THREE.Fog(0xf4ead8, 16, 38);
+  scene.fog = new THREE.Fog(0xf4ead8, 22, 52);
 
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 80);
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 80);
 
   const hemi = new THREE.HemisphereLight(0xf3ead4, 0x3d6b3a, 0.72);
   scene.add(hemi);
@@ -208,8 +214,8 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   cat.position.set(orchard.cat.x, orchard.cat.y, orchard.cat.z);
   scene.add(cat);
 
-  const appleGeo = new THREE.BoxGeometry(0.28, 0.28, 0.28);
-  const appleMat = new THREE.MeshLambertMaterial({ color: 0xc41e3a });
+  const appleGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+  const appleMat = new THREE.MeshLambertMaterial({ color: 0xb02e26 });
   const appleMesh = new THREE.InstancedMesh(appleGeo, appleMat, MAX_APPLES);
   appleMesh.castShadow = true;
   appleMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -226,7 +232,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   scene.add(pMesh);
 
   const dummy = new THREE.Object3D();
-  const look = new THREE.Vector3(0, 1.55, 0.2);
+  const look = new THREE.Vector3(0, 2.4, -1.4);
   const apples: Apple[] = Array.from({ length: MAX_APPLES }, () => ({
     live: false,
     destined: false,
@@ -299,7 +305,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     slot.vy = opts.destined ? 0.05 : 0.15;
     slot.vz = opts.destined ? (headZ() - slot.z) * 0.28 : (Math.random() - 0.5) * 0.5;
     slot.spin = (Math.random() - 0.5) * 4;
-    slot.scale = 0.85 + Math.random() * 0.3;
+    slot.scale = 1.05 + Math.random() * 0.28;
   };
 
   const burst = (
@@ -385,6 +391,9 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
       destined: true,
       from: { x: headX(), y: headY() + 0.16, z: headZ() },
     });
+  } else {
+    spawnApple({});
+    spawnApple({});
   }
 
   let last = performance.now();
@@ -561,15 +570,19 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     const sy = shake * 0.22 * Math.sin(t * 31.7);
     const sz = shake * 0.16 * Math.sin(t * 23.3);
 
-    if (!reduced) orbit += dt * 0.16;
-    const yawCam = 0.36 + Math.sin(orbit) * 0.14;
-    const radius = window.innerWidth < 700 ? 8.4 : 9.2;
-    const height = window.innerWidth < 700 ? 5.8 : 6.35;
-    const ox = Math.sin(yawCam) * radius + pointerX * 0.8;
-    const oz = Math.cos(yawCam) * radius + pointerY * 0.25;
+    if (!reduced) orbit += dt * 0.1;
+    const yawCam = 0.72 + Math.sin(orbit) * 0.08;
+    const radius = window.innerWidth < 700 ? 6.4 : 7.0;
+    const height = window.innerWidth < 700 ? 2.95 : 3.25;
+    const ox = Math.sin(yawCam) * radius + pointerX * 0.55;
+    const oz = Math.cos(yawCam) * radius + pointerY * 0.18;
     camera.up.set(0, 1, 0);
-    camera.position.set(ox + sx, Math.max(groundY + 3.8, height + pointerY * -0.3 + sy), oz + sz);
-    look.set(catX * 0.12, 1.25 + catY * 0.15, catZ);
+    camera.position.set(
+      ox + sx,
+      Math.max(groundY + 1.55, height + pointerY * -0.12 + sy),
+      oz + sz,
+    );
+    look.set(catX * 0.28, groundY + 1.95 + catY * 0.2, catZ - 2.35);
     camera.lookAt(look);
     camera.rotation.z = shake * 0.03 * Math.sin(t * 19.0);
 
