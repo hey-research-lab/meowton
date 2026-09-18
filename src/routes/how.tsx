@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalFoot } from "@/components/legal-foot";
-import { FEE_ORDER, FEES, MODE_LABEL, formatBps, SITE } from "@/lib/site";
+import { createFileRoute } from "@tanstack/react-router";
+import { LegalFoot } from "@/components/legal-foot";
+import { FEE_ORDER, FEES, HOLD, MODE_LABEL, formatBps, SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/how")({
   component: HowPage,
@@ -52,6 +54,24 @@ function HowPage() {
             </p>
           </li>
         </ol>
+
+        <h2 className="mt-10 font-display text-xl font-medium text-ink">
+          If you buy
+        </h2>
+        <p className="mt-2">{HOLD.thesis}</p>
+        <ol className="step-list mt-8">
+          {HOLD.get.map((row) => (
+            <li key={row.t}>
+              <h2>{row.t}</h2>
+              <p>{row.d}</p>
+            </li>
+          ))}
+        </ol>
+        <ul className="hold-not">
+          {HOLD.not.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
 
         <h2 className="mt-10 font-display text-xl font-medium text-ink">
           Proposed fees — not the pad’s

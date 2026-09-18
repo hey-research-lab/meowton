@@ -25,7 +25,21 @@ Isaac Newton + meow. Düşen elma = tokenize **$AAPL**. Kedi, yerçekimini ancak
 
 Saha cümlesi:
 
-> Not the first cat on AAPL. The bet is the hook: external stock-oracle direction, asymmetric fees. Unaudited. Not a payout.
+> Not the first cat on AAPL. Live: AAPL pair and a community vault. The directional hook is later. Unaudited. Not a payout.
+
+### Alınca ne olur (canlı, pad)
+
+Token almak **Apple hissesi almak değildir.** Kar payı, kupon, otomatik AAPL airdrop yok.
+
+| Olur | Olmaz |
+| --- | --- |
+| Quote = tokenize $AAPL | Apple equity / temettü |
+| 1B’nin tamamı havuzda, create’te creator bag 0 | Bize özel tahsis |
+| Community vault fee’den AAPL biriktirebilir | Cüzdana otomatik ödeme |
+| Holder’lar vault’u LONG araçlarıyla yönlendirir | Vaadedilmiş APY |
+| Meme-tarafı fee burn’ü pad splitter’ına bağlı | Fall/rise tablo — unmined |
+
+Fiyat sıfıra gidebilir. LONG terms imzada bağlar.
 
 Market-hours kapısı (StonkHook V3/V4) **kopyalanmaz.** MEOWTON saate bakmaz, AAPL’ın son oracle print’ine göre **yöne** bakar. Bu tablo LONG pad fee’si değildir.
 

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CopyText } from "@/components/copy-text";
 import { LegalFoot } from "@/components/legal-foot";
-import { explorerAddress, longTradeUrl, shorten, SITE } from "@/lib/site";
+import { explorerAddress, HOLD, longTradeUrl, shorten, SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/basket")({
   component: BasketPage,
@@ -64,6 +64,12 @@ function BasketPage() {
           ERC-20, no custom hook, no extra contract before you sign — LONG’s
           factory emits token, pool, Airlock and vault in that transaction.
         </p>
+        <p className="mt-4">{HOLD.thesis}</p>
+        <ul className="hold-not">
+          {HOLD.not.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
 
         <p className="launch-cta-wrap">
           <a

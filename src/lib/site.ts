@@ -4,7 +4,7 @@ export const SITE = {
   pair: "$MEOWTON × $AAPL",
   tagline: "He required an apple.",
   field:
-    "Not the first cat on AAPL. The bet is the hook: external stock-oracle direction, asymmetric fees. Unaudited. Not a payout.",
+    "Not the first cat on AAPL. Live: AAPL pair and a community vault. The directional hook is later. Unaudited. Not a payout.",
   domain: "meowton.lol",
   url: "https://meowton.lol",
   xHandle: null as string | null,
@@ -48,6 +48,36 @@ export const SITE = {
     description:
       "He required an apple. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
   },
+} as const;
+
+/** What a buyer actually holds on LONG. Not a coupon. */
+export const HOLD = {
+  thesis:
+    "You buy a cat quoted in AAPL. Volume can fill a community vault with AAPL. Holders, not the creator, point that vault.",
+  get: [
+    {
+      t: "AAPL on the other side",
+      d: "Every trade is $MEOWTON against tokenized $AAPL. The book is Apple, not a stablecoin.",
+    },
+    {
+      t: "No creator bag at create",
+      d: "The whole 1,000,000,000 supply goes in the pool. We do not receive tokens from LONG’s create.",
+    },
+    {
+      t: "Newton’s basket",
+      d: "Community mode routes a cut of trading fees into a vault that can hold AAPL. That stock sits there until holders move it.",
+    },
+    {
+      t: "Burns, if the pad splits them",
+      d: "LONG’s community splitter can burn a share of the meme-side fee. Supply only moves if their hook actually burns.",
+    },
+  ],
+  not: [
+    "Not Apple equity. Not a dividend. Not a coupon from us.",
+    "Not an automatic AAPL airdrop to your wallet.",
+    "Not the fall/rise fee table — that hook is unmined. You pay LONG’s fee.",
+    "Not a promise the vault pays you. Price can go to zero.",
+  ],
 } as const;
 
 export type FeeMode = "sleep" | "fall" | "rise";
