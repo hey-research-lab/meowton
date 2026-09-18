@@ -24,7 +24,7 @@ export const SITE = {
   aaplToken: "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
   aaplFeed: "0x6B22A786bAa607d76728168703a39Ea9C99f2cD0",
   poolManager: "0x8366a39CC670B4001A1121B8F6A443A643e40951",
-  tokenCa: null as string | null,
+  tokenCa: "0x21676bE78C8C0c8F639bAc5238a4a13B0e111e18" as string | null,
   hookCa: null as string | null,
   poolCa: null as string | null,
   basketCa: null as string | null,

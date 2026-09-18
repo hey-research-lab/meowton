@@ -98,12 +98,12 @@ function ArticlePage() {
             Self-custody. The app is not the protocol.
           </p>
           <p>
-            Token, pool, and vault addresses stay off this page until a
-            receipt exists. No fake CA. When they exist they will sit on{" "}
+            Token CA is live on{" "}
             <Link to="/basket" className="ext-link">
               /basket
-            </Link>{" "}
-            and the header will say Trade instead of pending.
+            </Link>
+            . Pool and vault stay pending until those receipts exist. The
+            header says Trade.
           </p>
 
           <h2>Weather, not the fee</h2>

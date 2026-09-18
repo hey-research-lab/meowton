@@ -43,20 +43,21 @@ community vault. No merkle, no keeper, no airdrop, no caller payout.
 | Feed | `0x6B22A786bAa607d76728168703a39Ea9C99f2cD0` |
 | PoolManager | `0x8366a39CC670B4001A1121B8F6A443A643e40951` |
 | Pad | https://app.long.xyz |
-| MEOWTON / hook / pool / basket | pending |
+| MEOWTON | `0x21676bE78C8C0c8F639bAc5238a4a13B0e111e18` |
+| hook / pool / basket | pending |
 
-No fabricated contract addresses. Wire them in `src/lib/site.ts` when they exist.
+No fabricated pool or vault addresses. Wire them in `src/lib/site.ts` when they exist.
 
 ## Site
 
 - `/` living orchard
 - `/how` pad + proposed fees
 - `/fall` live oracle
-- `/basket` listing card + pending contracts
+- `/basket` listing card + token CA
 - `/terms` website terms (points at LONG for the trading app)
-- `/privacy` website privacy (no accounts here)
+- `/privacy` website privacy (optional wallet connect)
 
-Copy is English. There is no buy button until a CA exists.
+Copy is English. Trade is on LONG.
 
 ## Next
 
