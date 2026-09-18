@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalFoot } from "@/components/legal-foot";
-import { createFileRoute } from "@tanstack/react-router";
-import { LegalFoot } from "@/components/legal-foot";
 import { FEE_ORDER, FEES, HOLD, MODE_LABEL, formatBps, SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/how")({
