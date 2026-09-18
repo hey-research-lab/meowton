@@ -3,6 +3,8 @@ export const SITE = {
   ticker: "$MEOWTON",
   pair: "$MEOWTON × $AAPL",
   tagline: "He required an apple.",
+  community: "The onchain $AAPL community.",
+  chartLine: "Every iPhone sold is our chart.",
   field:
     "Not the first cat on AAPL. Live: AAPL pair and a community vault. The directional hook is later. Unaudited. Not a payout.",
   domain: "meowton.lol",
@@ -12,6 +14,12 @@ export const SITE = {
   chainId: 4663,
   chainName: "Robinhood Chain",
   rpc: "https://rpc.mainnet.chain.robinhood.com",
+  rpcs: [
+    "https://rpc.mainnet.chain.robinhood.com",
+    "https://rpc.solidrpc.io/public/evm/4663",
+    "https://robinhood.drpc.org",
+    "https://robinhood-rpc.publicnode.com",
+  ] as const,
   explorer: "https://robinhoodchain.blockscout.com",
   aaplToken: "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
   aaplFeed: "0x6B22A786bAa607d76728168703a39Ea9C99f2cD0",
@@ -46,7 +54,7 @@ export const SITE = {
     image: "/x/logo.png",
     website: "https://meowton.lol",
     description:
-      "He required an apple. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. x.com/MeowtonLOL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
+      "He required an apple. $MEOWTON is paired with tokenized $AAPL — not a USD pair. Every trade can feed the vault. Gravity was a rumor. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
   },
 } as const;
 
@@ -119,6 +127,10 @@ export function explorerAddress(addr: string) {
   return `${SITE.explorer}/address/${addr}`;
 }
 
+export function explorerToken(addr: string) {
+  return `${SITE.explorer}/token/${addr}`;
+}
+
 export function longTradeUrl(ca: string | null = SITE.tokenCa) {
   if (!ca) return SITE.pad.app;
   return `${SITE.pad.app}/tokens/${ca}`;
@@ -160,6 +172,13 @@ export function formatAge(sec: number) {
   return `${d}d ${h % 24}h`;
 }
 
+export function formatShares(n: number) {
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
 export function formatTMinus(now = Date.now()) {
   if (!SITE.launchAt) return "T–";
   const ms = SITE.launchAt - now;
@@ -174,6 +193,10 @@ export function formatTMinus(now = Date.now()) {
 
 export function shorten(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+}
+
+export function isCanonicalLong(addr: string | null) {
+  return !!addr && addr.toLowerCase().endsWith("1e18");
 }
 
 export function resolveMode(input: {

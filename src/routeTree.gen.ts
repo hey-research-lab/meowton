@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArticleRouteImport } from './routes/article'
 import { Route as BasketRouteImport } from './routes/basket'
 import { Route as FallRouteImport } from './routes/fall'
 import { Route as HowRouteImport } from './routes/how'
@@ -19,6 +20,11 @@ import { Route as TermsRouteImport } from './routes/terms'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticleRoute = ArticleRouteImport.update({
+  id: '/article',
+  path: '/article',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BasketRoute = BasketRouteImport.update({
@@ -49,6 +55,7 @@ const TermsRoute = TermsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/article': typeof ArticleRoute
   '/basket': typeof BasketRoute
   '/fall': typeof FallRoute
   '/how': typeof HowRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/article': typeof ArticleRoute
   '/basket': typeof BasketRoute
   '/fall': typeof FallRoute
   '/how': typeof HowRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/article': typeof ArticleRoute
   '/basket': typeof BasketRoute
   '/fall': typeof FallRoute
   '/how': typeof HowRoute
@@ -74,14 +83,24 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/basket' | '/fall' | '/how' | '/privacy' | '/terms'
+  fullPaths:
+    '/' | '/article' | '/basket' | '/fall' | '/how' | '/privacy' | '/terms'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/basket' | '/fall' | '/how' | '/privacy' | '/terms'
-  id: '__root__' | '/' | '/basket' | '/fall' | '/how' | '/privacy' | '/terms'
+  to: '/' | '/article' | '/basket' | '/fall' | '/how' | '/privacy' | '/terms'
+  id:
+    | '__root__'
+    | '/'
+    | '/article'
+    | '/basket'
+    | '/fall'
+    | '/how'
+    | '/privacy'
+    | '/terms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArticleRoute: typeof ArticleRoute
   BasketRoute: typeof BasketRoute
   FallRoute: typeof FallRoute
   HowRoute: typeof HowRoute
@@ -96,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/article': {
+      id: '/article'
+      path: '/article'
+      fullPath: '/article'
+      preLoaderRoute: typeof ArticleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/basket': {
@@ -138,6 +164,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArticleRoute: ArticleRoute,
   BasketRoute: BasketRoute,
   FallRoute: FallRoute,
   HowRoute: HowRoute,

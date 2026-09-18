@@ -1,7 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CopyText } from "@/components/copy-text";
 import { LegalFoot } from "@/components/legal-foot";
-import { explorerAddress, HOLD, longTradeUrl, shorten, SITE } from "@/lib/site";
+import {
+  explorerAddress,
+  HOLD,
+  isCanonicalLong,
+  longTradeUrl,
+  shorten,
+  SITE,
+} from "@/lib/site";
 
 export const Route = createFileRoute("/basket")({
   component: BasketPage,
@@ -49,6 +56,7 @@ function Addr({ label, value }: { label: string; value: string | null }) {
 
 function BasketPage() {
   const trade = SITE.tokenCa ? longTradeUrl(SITE.tokenCa) : null;
+  const canonical = isCanonicalLong(SITE.tokenCa);
 
   return (
     <article className="paper">
@@ -70,6 +78,24 @@ function BasketPage() {
             <li key={line}>{line}</li>
           ))}
         </ul>
+
+        <h2 className="mt-10 font-display text-xl font-medium text-ink">
+          Live · $AAPL holdings
+        </h2>
+        <p className="mt-2 text-sm text-muted">
+          Same board $AI runs for NVDA. Numbers stay dry until the vault
+          address exists. Invented shares would be a different product.
+        </p>
+        <dl className="stat-grid mt-2">
+          <Row label="Community vault" value={SITE.basketCa ? "—" : null} />
+          <Row label="Liquidity pools" value={SITE.poolCa ? "—" : null} />
+          <Row
+            label="Canonical 1e18"
+            value={
+              SITE.tokenCa ? (canonical ? "yes" : "no — do not ship") : null
+            }
+          />
+        </dl>
 
         <p className="launch-cta-wrap">
           <a
@@ -100,7 +126,8 @@ function BasketPage() {
         <p className="mt-2 text-sm text-muted">
           Paste into {SITE.pad.name}. Ticker is letters only. Name is{" "}
           {SITE.listing.name} — not MEWTON. Quote is AAPL. Website is{" "}
-          {SITE.domain}. Image is the 800×800 mark.
+          {SITE.domain}. Image is the 800×800 mark. Community mode must be on.
+          Receipt address must end in <span className="font-mono">1e18</span>.
         </p>
         <div className="copy-stack">
           <CopyText label="Name" value={SITE.listing.name} />

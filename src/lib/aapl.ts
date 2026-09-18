@@ -14,6 +14,7 @@ export type AaplSnapshot = {
   sellBps: number;
   roundId: string | null;
   description: string;
+  rpc?: string;
   error?: string;
 };
 
@@ -21,6 +22,7 @@ const SELECTOR_LATEST = "0xfeaf968c";
 const SELECTOR_GET_ROUND = "0x9a6fc8f5";
 const CACHE_MS = 20_000;
 const FAIL_CACHE_MS = 5_000;
+const RPC_TIMEOUT_MS = 4_000;
 
 let cache: { at: number; snap: AaplSnapshot } | null = null;
 
@@ -60,33 +62,40 @@ function scalePrice(answer: bigint): number {
   return Number(answer) / 10 ** SITE.feedDecimals;
 }
 
-async function ethCall(data: string): Promise<string> {
-  const res = await fetch(SITE.rpc, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "eth_call",
-      params: [{ to: SITE.aaplFeed, data }, "latest"],
-    }),
-  });
-  if (!res.ok) throw new Error(`rpc ${res.status}`);
-  const json = (await res.json()) as {
-    result?: string;
-    error?: { message?: string };
-  };
-  if (json.error?.message) throw new Error(json.error.message);
-  if (!json.result || json.result === "0x") throw new Error("empty result");
-  return json.result;
+async function ethCall(rpc: string, data: string): Promise<string> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), RPC_TIMEOUT_MS);
+  try {
+    const res = await fetch(rpc, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "eth_call",
+        params: [{ to: SITE.aaplFeed, data }, "latest"],
+      }),
+      signal: ctrl.signal,
+    });
+    if (!res.ok) throw new Error(`rpc ${res.status}`);
+    const json = (await res.json()) as {
+      result?: string;
+      error?: { message?: string };
+    };
+    if (json.error?.message) throw new Error(json.error.message);
+    if (!json.result || json.result === "0x") throw new Error("empty result");
+    return json.result;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function encodeGetRound(roundId: bigint): string {
   return `${SELECTOR_GET_ROUND}${roundId.toString(16).padStart(64, "0")}`;
 }
 
-async function readFeed(nowMs: number): Promise<AaplSnapshot> {
-  const latest = await ethCall(SELECTOR_LATEST);
+async function readFeedFrom(rpc: string, nowMs: number): Promise<AaplSnapshot> {
+  const latest = await ethCall(rpc, SELECTOR_LATEST);
   const roundId = word(latest, 0);
   const answer = toSigned256(word(latest, 1));
   const updatedAt = Number(word(latest, 3));
@@ -95,7 +104,7 @@ async function readFeed(nowMs: number): Promise<AaplSnapshot> {
   let prevAnswer: bigint | null = null;
   let prevPrice: number | null = null;
   try {
-    const prevRaw = await ethCall(encodeGetRound(roundId - 1n));
+    const prevRaw = await ethCall(rpc, encodeGetRound(roundId - 1n));
     prevAnswer = toSigned256(word(prevRaw, 1));
     prevPrice = scalePrice(prevAnswer);
   } catch {
@@ -130,7 +139,20 @@ async function readFeed(nowMs: number): Promise<AaplSnapshot> {
     sellBps: fees.sellBps,
     roundId: roundId.toString(),
     description: SITE.feedName,
+    rpc,
   };
+}
+
+async function readFeed(nowMs: number): Promise<AaplSnapshot> {
+  const errors: string[] = [];
+  for (const rpc of SITE.rpcs) {
+    try {
+      return await readFeedFrom(rpc, nowMs);
+    } catch (err) {
+      errors.push(`${rpc}: ${err instanceof Error ? err.message : "fail"}`);
+    }
+  }
+  throw new Error(errors.join(" | ") || "all rpcs unread");
 }
 
 export const fetchAapl = createServerFn({ method: "GET" }).handler(

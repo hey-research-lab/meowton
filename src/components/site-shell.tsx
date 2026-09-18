@@ -5,7 +5,6 @@ import { OrchardScene } from "@/components/orchard-scene";
 import { requestOrchardTap, useNewton } from "@/lib/newton";
 import { useAapl } from "@/lib/use-aapl";
 import {
-  formatBps,
   formatTMinus,
   formatUsd,
   longTradeUrl,
@@ -15,6 +14,7 @@ import {
 
 const NAV = [
   { to: "/how", label: "How" },
+  { to: "/article", label: "Note" },
   { to: "/fall", label: "Fall" },
   { to: "/basket", label: "Basket" },
 ] as const;
@@ -38,15 +38,13 @@ function Chrome() {
               {price != null ? formatUsd(price) : "—"}
             </span>
             <span className="hud-dot">·</span>
-            <span className="mode-chip" data-mode={mode}>
+            <span
+              className="mode-chip"
+              data-mode={mode}
+              title="Orchard weather. Not the pad fee."
+            >
               <i aria-hidden="true" />
               {MODE_LABEL[mode]}
-            </span>
-            <span className="hud-dot">·</span>
-            <span className="tabular-nums">
-              {aapl.data
-                ? `${formatBps(aapl.data.buyBps)} / ${formatBps(aapl.data.sellBps)}`
-                : "—"}
             </span>
             {SITE.launchAt ? (
               <>
@@ -112,6 +110,7 @@ function Foot({ home }: { home: boolean }) {
         <div className="foot-brand">
           <TitleTag className="foot-title">{SITE.tagline}</TitleTag>
           <p className="foot-lede">Gravity was a rumor.</p>
+          {home ? <p className="foot-lede">{SITE.community}</p> : null}
         </div>
         <div className="foot-meta">
           {home ? (

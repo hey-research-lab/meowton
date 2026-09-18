@@ -12,14 +12,14 @@ export const Route = createFileRoute("/how")({
 function HowPage() {
   return (
     <article className="paper">
-      <p className="paper-kicker">Three things, then you’re caught up</p>
-      <h1 className="paper-title">The pair. The pad. The basket.</h1>
+      <p className="paper-kicker">{SITE.community}</p>
+      <h1 className="paper-title">Pair. Vault. Burn.</h1>
       <div className="paper-body">
         <p>
-          {SITE.pair}. Create is on {SITE.pad.name}, anchored to tokenized
-          $AAPL — not a USD pair. This site still reads Chainlink{" "}
+          {SITE.pair}. Not a USD pair. {SITE.chartLine} Create is on{" "}
+          {SITE.pad.name}, community mode on. This site still reads Chainlink{" "}
           {SITE.feedName} so you can see the print. The pad’s hook is not
-          ours.
+          ours. The directional table is later.
         </p>
 
         <ol className="step-list mt-8">
@@ -32,26 +32,34 @@ function HowPage() {
             </p>
           </li>
           <li>
-            <h2>Pad</h2>
+            <h2>Vault</h2>
             <p>
-              Launch is {SITE.pad.name}’s Airlock. Typical create puts the
-              whole {SITE.listing.supply} supply into the AAPL pool. The
-              creator receives no tokens. Their protocol keeps a cut. Their
-              terms let them change fees later. Do not deploy a token
-              beforehand — a homemade ERC-20 will not be this pool. Airlock
-              cannot be swapped for our hook after the pool exists.
+              Community mode — on at create — routes a cut of every trade into
+              Newton’s basket. Quote-side fees can sit there as AAPL. Volume
+              compounds it. The vault is not a coupon and not a payout. Holders
+              point it, not the creator.
             </p>
           </li>
           <li>
-            <h2>Basket</h2>
+            <h2>Burn</h2>
             <p>
-              Community mode — on at create — sends a portion of trading fees
-              toward a vault that can hold AAPL. That vault is Newton’s basket
-              on this pad. It is not a burn. It is not a payout. It is not the
-              directional table below.
+              Meme-side fees on {SITE.pad.name} can burn or lock{" "}
+              {SITE.ticker}. Supply only tightens if their splitter actually
+              burns. We do not take a creator bag at create. The whole{" "}
+              {SITE.listing.supply} supply goes in the AAPL pool.
             </p>
           </li>
         </ol>
+
+        <h2 className="mt-10 font-display text-xl font-medium text-ink">
+          The pad
+        </h2>
+        <p className="mt-2">
+          Launch is {SITE.pad.name}’s Airlock. Do not deploy a homemade ERC-20
+          first — that contract will not be this pair. Their protocol keeps a
+          cut. Their terms let them change fees later. Airlock cannot be swapped
+          for our directional hook after the pool exists.
+        </p>
 
         <h2 className="mt-10 font-display text-xl font-medium text-ink">
           If you buy
