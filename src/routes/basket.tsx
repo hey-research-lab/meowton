@@ -60,7 +60,9 @@ function BasketPage() {
           mode on. The whole {SITE.listing.supply} supply goes into the pool.
           The creator receives no tokens. Fees that can sit in AAPL go to
           their vault — the basket on this pad. Addresses for {SITE.ticker}{" "}
-          stay pending until the receipt exists. No fake CA.
+          stay pending until the receipt exists. No fake CA. No pre-deployed
+          ERC-20, no custom hook, no extra contract before you sign — LONG’s
+          factory emits token, pool, Airlock and vault in that transaction.
         </p>
 
         <p className="launch-cta-wrap">

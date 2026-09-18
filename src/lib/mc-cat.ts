@@ -72,12 +72,46 @@ function mcBox(
   return mesh;
 }
 
+type Group = InstanceType<Three["Group"]>;
+
+export type McCatBones = {
+  facing: Group;
+  body: Group;
+  head: Group;
+  tail1: Group;
+  tail2: Group;
+};
+
 export type McCat = {
-  root: InstanceType<Three["Group"]>;
+  root: Group;
   material: Material;
+  bones: McCatBones;
   headLocal: { x: number; y: number; z: number };
   dispose: () => void;
 };
+
+/** Bedrock `animation.cat.sit` rest + Java sit tail, in radians. */
+const SIT = {
+  bodyX: -Math.PI / 4,
+  headX: 0,
+  headY: 0,
+  tail1X: 0.78,
+  tail2X: 0.78,
+} as const;
+
+export function tickSitRig(bones: McCatBones, t: number, phase: string) {
+  const look = phase === "bonk" ? 0.15 : 1;
+  const flick = phase === "awake" ? 1.25 : 1;
+  bones.body.rotation.x = SIT.bodyX + Math.sin(t * 1.7) * 0.018;
+  bones.head.rotation.y = (Math.sin(t * 0.55) * 0.22 + Math.sin(t * 0.17) * 0.1) * look;
+  bones.head.rotation.x = SIT.headX + Math.sin(t * 0.8) * 0.07 * look;
+  bones.head.rotation.z = Math.sin(t * 0.4) * 0.03;
+  // Tip-heavy sit tail — wiki sitting sticker + animation.cat.sit 45°/45°.
+  bones.tail1.rotation.x = SIT.tail1X + Math.sin(t * 1.15) * 0.06;
+  bones.tail1.rotation.z = Math.sin(t * 1.4) * 0.08 * flick;
+  bones.tail2.rotation.x = SIT.tail2X + Math.sin(t * 2.05 + 0.4) * 0.14 * flick;
+  bones.tail2.rotation.z = Math.sin(t * 1.4 + 0.7) * 0.16 * flick;
+}
 
 /**
  * Vanilla Ocelot/Cat cubes + official 64×32 entity texture.
@@ -121,21 +155,21 @@ export function buildMcCat(THREE: Three, texture: Texture): McCat {
   head.add(skull, nose, earL, earR);
   facing.add(head);
 
+  // tail2 is a child of tail1 — Bedrock geometry.cat, animation.cat.sit.
   const tail1 = new THREE.Group();
-  tail1.position.set(0, 1, 6);
-  tail1.rotation.x = -1.73;
+  tail1.position.set(0, 5.2, 6.2);
+  tail1.rotation.x = SIT.tail1X;
   const t1 = mcBox(THREE, material, 0, 15, 1, 8, 1);
-  t1.position.set(0, -4, 0.5);
+  t1.position.set(0, 4, 0);
   tail1.add(t1);
-  facing.add(tail1);
-
   const tail2 = new THREE.Group();
-  tail2.position.set(0, 2, 13.2);
-  tail2.rotation.x = -2.67;
+  tail2.position.set(0, 8, 0);
+  tail2.rotation.x = SIT.tail2X;
   const t2 = mcBox(THREE, material, 4, 15, 1, 8, 1);
-  t2.position.set(0, -4, 0.5);
+  t2.position.set(0, 4, 0);
   tail2.add(t2);
-  facing.add(tail2);
+  tail1.add(tail2);
+  facing.add(tail1);
 
   const hind = (x: number) => {
     const g = new THREE.Group();
@@ -164,6 +198,7 @@ export function buildMcCat(THREE: Three, texture: Texture): McCat {
   return {
     root,
     material,
+    bones: { facing, body, head, tail1, tail2 },
     headLocal: { x: 0, y: 12.3, z: -8 },
     dispose: () => {
       root.traverse((obj: Object3D) => {

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { applyCatTexture, buildMcCat, COAT_TEXTURE } from "@/lib/mc-cat";
+import { applyCatTexture, buildMcCat, COAT_TEXTURE, tickSitRig } from "@/lib/mc-cat";
 import { onOrchardTap, useNewton } from "@/lib/newton";
 import { generateOrchard, meshOrchard } from "@/lib/voxel-world";
 
@@ -379,18 +379,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
         spawnApple({});
       }
 
-      if (phase === "awake" && !jumping) {
-        catX += dir * 0.85 * dt;
-        if (catX > 1.8) {
-          catX = 1.8;
-          dir = -1;
-        } else if (catX < -1.6) {
-          catX = -1.6;
-          dir = 1;
-        }
-        const want = dir === 1 ? 0 : Math.PI;
-        yaw += (want - yaw) * (1 - Math.exp(-8 * dt));
-      }
+      // Stays seated — animation.cat.sit. Walk patrol made it a dog again.
 
       if (jumping) {
         catVy -= GRAVITY * dt;
@@ -468,6 +457,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
             ? 1.12
             : 0.9
           : 1;
+    if (!reduced) tickSitRig(mcCat.bones, now * 0.001, phase);
     cat.position.set(catX, groundY + catY, catZ);
     cat.rotation.y = yaw;
     cat.scale.set(

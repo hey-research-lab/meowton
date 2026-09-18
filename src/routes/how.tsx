@@ -37,8 +37,9 @@ function HowPage() {
               Launch is {SITE.pad.name}’s Airlock. Typical create puts the
               whole {SITE.listing.supply} supply into the AAPL pool. The
               creator receives no tokens. Their protocol keeps a cut. Their
-              terms let them change fees later. Airlock cannot be swapped for
-              our hook after the pool exists.
+              terms let them change fees later. Do not deploy a token
+              beforehand — a homemade ERC-20 will not be this pool. Airlock
+              cannot be swapped for our hook after the pool exists.
             </p>
           </li>
           <li>
