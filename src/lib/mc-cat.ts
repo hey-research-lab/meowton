@@ -79,6 +79,10 @@ export type McCatBones = {
   head: Group;
   tail1: Group;
   tail2: Group;
+  frontL: Group;
+  frontR: Group;
+  hindL: Group;
+  hindR: Group;
 };
 
 export type McCat = {
@@ -96,15 +100,37 @@ const STAND = {
   tail2X: 0.35,
 } as const;
 
-export function tickSitRig(bones: McCatBones, t: number, phase: string) {
-  const look = phase === "bonk" ? 0.2 : 1;
-  bones.body.rotation.x = STAND.bodyX + Math.sin(t * 2.1) * 0.012;
+/** Java OcelotModel / Bedrock animation.cat.walk — trot, ±57.3° × speed. */
+export function tickCatRig(
+  bones: McCatBones,
+  input: { t: number; dist: number; speed: number; phase: string; jumping: boolean },
+) {
+  const { t, dist, phase, jumping } = input;
+  const speed = jumping ? 0 : Math.max(0, Math.min(1.15, input.speed));
+  const look = phase === "bonk" ? 0.15 : 1;
+  const swing = Math.cos(dist * 0.6662) * speed;
+  const swingOpp = Math.cos(dist * 0.6662 + Math.PI) * speed;
+
+  bones.frontL.rotation.x = swingOpp;
+  bones.frontR.rotation.x = swing;
+  bones.hindL.rotation.x = swing;
+  bones.hindR.rotation.x = swingOpp;
+
+  bones.body.rotation.x = STAND.bodyX + Math.sin(dist * 1.33) * 0.04 * speed;
   bones.head.rotation.y = (Math.sin(t * 0.5) * 0.16 + Math.sin(t * 0.14) * 0.08) * look;
   bones.head.rotation.x = STAND.headX + Math.sin(t * 0.75) * 0.05 * look;
-  bones.tail1.rotation.x = STAND.tail1X + Math.sin(t * 1.2) * 0.05;
-  bones.tail1.rotation.z = Math.sin(t * 1.35) * 0.06;
-  bones.tail2.rotation.x = STAND.tail2X + Math.sin(t * 1.8 + 0.4) * 0.1;
-  bones.tail2.rotation.z = Math.sin(t * 1.35 + 0.5) * 0.12;
+  bones.tail1.rotation.x = STAND.tail1X + Math.cos(dist * 1.0) * 0.14 * Math.max(0.25, speed);
+  bones.tail1.rotation.z = Math.sin(t * 1.35) * 0.05;
+  bones.tail2.rotation.x = STAND.tail2X + Math.cos(dist * 1.0) * 0.22 * Math.max(0.25, speed);
+  bones.tail2.rotation.z = Math.sin(t * 1.35 + 0.5) * 0.1;
+}
+
+export function tickSitRig(
+  bones: McCatBones,
+  t: number,
+  phase: string,
+) {
+  tickCatRig(bones, { t, dist: 0, speed: 0, phase, jumping: false });
 }
 
 /**
@@ -161,32 +187,36 @@ export function buildMcCat(THREE: Three, texture: Texture): McCat {
   tail1.add(tail2);
   facing.add(tail1);
 
-  const hind = (x: number) => {
-    const g = new THREE.Group();
-    g.position.set(x, 6, 5.2);
-    const mesh = mcBox(THREE, material, 8, 13, 2, 6, 2);
-    mesh.position.set(0, -3, 0);
-    g.add(mesh);
-    facing.add(g);
-  };
-  hind(1.1);
-  hind(-1.1);
+  const hindL = new THREE.Group();
+  hindL.position.set(1.1, 6, 5.2);
+  const hindLMesh = mcBox(THREE, material, 8, 13, 2, 6, 2);
+  hindLMesh.position.set(0, -3, 0);
+  hindL.add(hindLMesh);
+  facing.add(hindL);
+  const hindR = new THREE.Group();
+  hindR.position.set(-1.1, 6, 5.2);
+  const hindRMesh = mcBox(THREE, material, 8, 13, 2, 6, 2);
+  hindRMesh.position.set(0, -3, 0);
+  hindR.add(hindRMesh);
+  facing.add(hindR);
 
-  const front = (x: number) => {
-    const g = new THREE.Group();
-    g.position.set(x, 6, -5.2);
-    const mesh = mcBox(THREE, material, 40, 0, 2, 6, 2);
-    mesh.position.set(0, -3, 0);
-    g.add(mesh);
-    facing.add(g);
-  };
-  front(1.2);
-  front(-1.2);
+  const frontL = new THREE.Group();
+  frontL.position.set(1.2, 6, -5.2);
+  const frontLMesh = mcBox(THREE, material, 40, 0, 2, 6, 2);
+  frontLMesh.position.set(0, -3, 0);
+  frontL.add(frontLMesh);
+  facing.add(frontL);
+  const frontR = new THREE.Group();
+  frontR.position.set(-1.2, 6, -5.2);
+  const frontRMesh = mcBox(THREE, material, 40, 0, 2, 6, 2);
+  frontRMesh.position.set(0, -3, 0);
+  frontR.add(frontRMesh);
+  facing.add(frontR);
 
   return {
     root,
     material,
-    bones: { facing, body, head, tail1, tail2 },
+    bones: { facing, body, head, tail1, tail2, frontL, frontR, hindL, hindR },
     headLocal: { x: 0, y: 8.6, z: -9.2 },
     dispose: () => {
       root.traverse((obj: Object3D) => {

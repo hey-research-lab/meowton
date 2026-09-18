@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { applyCatTexture, buildMcCat, COAT_TEXTURE, tickSitRig } from "@/lib/mc-cat";
+import { applyCatTexture, buildMcCat, COAT_TEXTURE, tickCatRig } from "@/lib/mc-cat";
 import { onOrchardTap, useNewton } from "@/lib/newton";
 import { generateOrchard, meshOrchard } from "@/lib/voxel-world";
 
@@ -227,7 +227,13 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let orbit = 0;
   let pointerX = 0;
   let pointerY = 0;
+  let walkDist = 0;
+  let walkSpeed = 0;
+  let wp = 0;
+  let pause = 0.6;
   const groundY = orchard.groundY;
+  const waypoints = orchard.waypoints;
+  const trunks = orchard.trunks;
 
   const CAT_SCALE = 0.11;
   const HEAD_FWD = 9.2;
@@ -380,7 +386,45 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
         spawnApple({});
       }
 
-      // Stays seated — animation.cat.sit. Walk patrol made it a dog again.
+      // animation.cat.walk — trot among the grove. Freeze on bonk / leap.
+      walkSpeed = 0;
+      if (!jumping && phase !== "bonk") {
+        if (pause > 0) {
+          pause -= dt;
+        } else {
+          const target = waypoints[wp];
+          let dx = target.x - catX;
+          let dz = target.z - catZ;
+          for (const tr of trunks) {
+            const tx = catX - tr.x;
+            const tz = catZ - tr.z;
+            const d2 = tx * tx + tz * tz;
+            if (d2 < 1.1 && d2 > 0.0001) {
+              const inv = 0.55 / d2;
+              dx += tx * inv;
+              dz += tz * inv;
+            }
+          }
+          const len = Math.hypot(dx, dz);
+          if (len < 0.32) {
+            wp = (wp + 1) % waypoints.length;
+            pause = 0.35 + Math.random() * 1.1;
+          } else {
+            dx /= len;
+            dz /= len;
+            const step = 0.72 * dt;
+            catX += dx * step;
+            catZ += dz * step;
+            walkDist += step;
+            walkSpeed = 0.72;
+            const want = Math.atan2(-dx, -dz);
+            let dyaw = want - yaw;
+            while (dyaw > Math.PI) dyaw -= Math.PI * 2;
+            while (dyaw < -Math.PI) dyaw += Math.PI * 2;
+            yaw += dyaw * (1 - Math.exp(-7 * dt));
+          }
+        }
+      }
 
       if (jumping) {
         catVy -= GRAVITY * dt;
@@ -458,7 +502,14 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
             ? 1.12
             : 0.9
           : 1;
-    if (!reduced) tickSitRig(mcCat.bones, now * 0.001, phase);
+    if (!reduced)
+      tickCatRig(mcCat.bones, {
+        t: now * 0.001,
+        dist: walkDist,
+        speed: walkSpeed,
+        phase,
+        jumping,
+      });
     cat.position.set(catX, groundY + catY, catZ);
     cat.rotation.y = yaw;
     cat.scale.set(
@@ -526,7 +577,11 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
       groundY + height + pointerY * -0.04 + sy,
       oz + sz,
     );
-    look.set(1.6, groundY + 1.55, -2.8);
+    look.set(
+      1.6 * 0.72 + catX * 0.28,
+      groundY + 1.55,
+      -2.8 * 0.62 + catZ * 0.38,
+    );
     camera.lookAt(look);
     camera.rotation.z = shake * 0.03 * Math.sin(t * 19.0);
 

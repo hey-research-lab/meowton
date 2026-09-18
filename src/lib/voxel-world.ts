@@ -26,6 +26,8 @@ export type OrchardData = {
   drop: { x: number; y: number; z: number };
   cat: { x: number; y: number; z: number };
   groundY: number;
+  trunks: { x: number; z: number }[];
+  waypoints: { x: number; z: number }[];
 };
 
 const PALETTE: Record<number, [number, number, number]> = {
@@ -208,7 +210,7 @@ export function generateOrchard(): OrchardData {
     if (hash2(bx + 1, bz) > 0.45) set(bx + 1, 3, bz, BLOCK.LEAF);
   };
 
-  for (const [tx, tz, h, r] of [
+  const grove = [
     [CX + 6, CZ - 6, 5, 2.35],
     [CX + 11, CZ - 5, 6, 2.55],
     [CX + 16, CZ - 8, 5, 2.4],
@@ -222,9 +224,8 @@ export function generateOrchard(): OrchardData {
     [CX + 4, CZ - 16, 5, 2.3],
     [CX - 3, CZ - 18, 4, 2.2],
     [CX + 10, CZ - 19, 5, 2.35],
-  ] as const) {
-    addTree(tx, tz, h, r);
-  }
+  ] as const;
+  for (const [tx, tz, h, r] of grove) addTree(tx, tz, h, r);
 
   for (const [bx, bz] of [
     [CX - 4, CZ + 3],
@@ -241,8 +242,19 @@ export function generateOrchard(): OrchardData {
 
   const cat = { x: -1.45, y: 3 * S, z: 2.15 };
   const drop = { x: 2.35, y: 3.55, z: -0.4 };
+  const trunks = grove.map(([tx, tz]) => toWorld(tx, 3, tz));
+  const waypoints = [
+    { x: -1.45, z: 2.15 },
+    { x: 0.15, z: 1.35 },
+    { x: 1.7, z: 0.35 },
+    { x: 2.55, z: -0.85 },
+    { x: 1.1, z: -1.65 },
+    { x: -0.35, z: -1.2 },
+    { x: -1.8, z: -0.15 },
+    { x: -2.15, z: 1.1 },
+  ];
 
-  return { blocks, appleSpawns, drop, cat, groundY: 3 * S };
+  return { blocks, appleSpawns, drop, cat, groundY: 3 * S, trunks, waypoints };
 }
 
 export function meshOrchard(THREE: Three, blocks: Uint8Array) {
