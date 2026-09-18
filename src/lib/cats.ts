@@ -254,7 +254,7 @@ export function readStoredCoat(): CoatId {
   } catch {
     /* ignore */
   }
-  return "red";
+  return "jellie";
 }
 
 export function writeStoredCoat(id: CoatId) {

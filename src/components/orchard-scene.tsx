@@ -142,7 +142,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   const loader = new THREE.TextureLoader();
   const coatCache = new Map<string, InstanceType<Three["Texture"]>>();
   const loadCoat = (id: string) => {
-    const url = COAT_TEXTURE[id as keyof typeof COAT_TEXTURE] ?? COAT_TEXTURE.red;
+    const url = COAT_TEXTURE[id as keyof typeof COAT_TEXTURE] ?? COAT_TEXTURE.jellie;
     const hit = coatCache.get(url);
     if (hit) return hit;
     const tex = loader.load(url);
@@ -229,12 +229,13 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let pointerY = 0;
   const groundY = orchard.groundY;
 
-  const CAT_SCALE = 0.125;
-  const HEAD_FWD = 6.6;
-  const HEAD_UP = 10.6;
-  const headX = () => catX + Math.cos(yaw) * HEAD_FWD * CAT_SCALE;
+  const CAT_SCALE = 0.11;
+  const HEAD_FWD = 9.2;
+  const HEAD_UP = 8.6;
+  // Standing model faces −Z at yaw 0.
+  const headX = () => catX + Math.sin(yaw) * HEAD_FWD * CAT_SCALE;
   const headY = () => groundY + catY + HEAD_UP * CAT_SCALE;
-  const headZ = () => catZ - Math.sin(yaw) * HEAD_FWD * CAT_SCALE;
+  const headZ = () => catZ - Math.cos(yaw) * HEAD_FWD * CAT_SCALE;
 
   const spawnApple = (opts: {
     destined?: boolean;
@@ -512,19 +513,20 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     const sy = shake * 0.22 * Math.sin(t * 31.7);
     const sz = shake * 0.16 * Math.sin(t * 23.3);
 
-    if (!reduced) orbit += dt * 0.1;
-    const yawCam = 0.72 + Math.sin(orbit) * 0.08;
-    const radius = window.innerWidth < 700 ? 6.4 : 7.0;
-    const height = window.innerWidth < 700 ? 2.95 : 3.25;
-    const ox = Math.sin(yawCam) * radius + pointerX * 0.55;
-    const oz = Math.cos(yawCam) * radius + pointerY * 0.18;
+    if (!reduced) orbit += dt * 0.06;
+    // Wiki isometric: above, front-right of a −Z-facing cat.
+    const yawCam = -2.35 + Math.sin(orbit) * 0.05;
+    const radius = window.innerWidth < 700 ? 5.6 : 6.1;
+    const height = window.innerWidth < 700 ? 4.2 : 4.55;
+    const ox = catX + Math.sin(yawCam) * radius + pointerX * 0.35;
+    const oz = catZ + Math.cos(yawCam) * radius + pointerY * 0.12;
     camera.up.set(0, 1, 0);
     camera.position.set(
       ox + sx,
-      Math.max(groundY + 1.55, height + pointerY * -0.12 + sy),
+      groundY + height + pointerY * -0.08 + sy,
       oz + sz,
     );
-    look.set(catX * 0.28, groundY + 1.95 + catY * 0.2, catZ - 2.35);
+    look.set(catX, groundY + 1.15 + catY * 0.15, catZ - 0.4);
     camera.lookAt(look);
     camera.rotation.z = shake * 0.03 * Math.sin(t * 19.0);
 
