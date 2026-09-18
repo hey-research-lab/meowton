@@ -5,9 +5,29 @@ function hash(n: number) {
   return x - Math.floor(x);
 }
 
+export const CAT_PATH: Vec3[] = [
+  [-2.4, 0, 2.0],
+  [0.2, 0, 2.4],
+  [2.2, 0, 1.4],
+  [2.0, 0, -0.4],
+  [0.4, 0, -1.6],
+  [-2.0, 0, -0.8],
+  [-2.6, 0, 0.6],
+];
+
+function nearLoop(x: number, z: number) {
+  for (const [px, , pz] of CAT_PATH) {
+    const dx = x - px;
+    const dz = z - pz;
+    if (dx * dx + dz * dz < 1.85) return true;
+  }
+  return false;
+}
+
 function isPath(x: number, z: number) {
   const cx = Math.sin(z * 0.14) * 2.6;
-  return Math.abs(x - cx) <= 1.15 && z > -16 && z < 8;
+  const grove = Math.abs(x - cx) <= 1.15 && z > -16 && z < 8;
+  return grove || nearLoop(x, z);
 }
 
 export type OrchardLayout = {
@@ -18,6 +38,7 @@ export type OrchardLayout = {
   leaves: Vec3[];
   apples: Vec3[];
   dropFrom: Vec3;
+  path: Vec3[];
 };
 
 export function buildOrchard(): OrchardLayout {
@@ -86,10 +107,10 @@ export function buildOrchard(): OrchardLayout {
     }
   }
 
-  trunks.push([1.2, 2.2, 1.4], [1.2, 3.1, 1.4], [0.5, 3.4, 1.1]);
-  leaves.push([0.5, 4.1, 1.1], [1.2, 4.2, 1.4], [0.2, 4.3, 0.6], [0.6, 4.8, 1.0]);
-  const dropFrom: Vec3 = [0.2, 4.55, 0.85];
+  trunks.push([1.4, 2.2, 2.6], [1.4, 3.1, 2.6], [0.7, 3.4, 2.2]);
+  leaves.push([0.7, 4.2, 2.2], [1.4, 4.3, 2.6], [0.3, 4.4, 1.7], [0.8, 4.9, 2.1]);
+  const dropFrom: Vec3 = [0.35, 4.7, 1.55];
   apples.push(dropFrom);
 
-  return { grass, grassColor, dirt, trunks, leaves, apples, dropFrom };
+  return { grass, grassColor, dirt, trunks, leaves, apples, dropFrom, path: CAT_PATH };
 }

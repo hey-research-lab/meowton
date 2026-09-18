@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { AdaptiveDpr } from "@react-three/drei";
 import { useLayoutEffect } from "react";
 import * as THREE from "three";
+import { catPose } from "@/lib/cat-pose";
 import { OrchardWorld } from "@/components/orchard/world";
 
 function Lights() {
@@ -16,8 +16,8 @@ function Lights() {
         position={[12, 18, 10]}
         intensity={1.9}
         color="#ffd89a"
-        shadow-mapSize-width={1536}
-        shadow-mapSize-height={1536}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
         shadow-camera-near={2}
         shadow-camera-far={56}
         shadow-camera-left={-22}
@@ -38,8 +38,12 @@ function CameraRig() {
   }, [gl]);
 
   useFrame(({ camera }) => {
-    camera.position.set(0.2, 6.1, 10.2);
-    camera.lookAt(0, 1.35, 0.35);
+    const tx = 0.25 + catPose.x * 0.18;
+    const tz = 11.4 + catPose.z * 0.12;
+    camera.position.x += (tx - camera.position.x) * 0.04;
+    camera.position.y += (6.35 - camera.position.y) * 0.04;
+    camera.position.z += (tz - camera.position.z) * 0.04;
+    camera.lookAt(catPose.x * 0.35, 1.25, catPose.z * 0.35);
   });
 
   return null;
@@ -51,10 +55,10 @@ export function OrchardCanvas() {
       className="orchard-canvas"
       shadows
       dpr={[1, 1.5]}
+      frameloop="always"
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-      camera={{ position: [0.2, 6.1, 10.2], fov: 40, near: 0.2, far: 90 }}
+      camera={{ position: [0.25, 6.35, 11.4], fov: 40, near: 0.2, far: 90 }}
     >
-      <AdaptiveDpr />
       <Lights />
       <CameraRig />
       <OrchardWorld />
