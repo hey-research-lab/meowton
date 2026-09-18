@@ -223,7 +223,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let catVy = 0;
   let jumping = false;
   let dir: 1 | -1 = 1;
-  let yaw = 0.55;
+  let yaw = Math.PI - 0.45;
   let orbit = 0;
   let pointerX = 0;
   let pointerY = 0;
