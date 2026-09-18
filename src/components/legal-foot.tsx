@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { SITE } from "@/lib/site";
+import { SITE, xUrl } from "@/lib/site";
 
 export function LegalFoot({ home = false }: { home?: boolean }) {
   return (
@@ -11,6 +11,15 @@ export function LegalFoot({ home = false }: { home?: boolean }) {
       <Link to="/privacy" className="legal-link">
         Privacy
       </Link>
+      <span aria-hidden="true">·</span>
+      <a
+        className="legal-link"
+        href={xUrl()}
+        target="_blank"
+        rel="noreferrer"
+      >
+        @{SITE.xHandle}
+      </a>
       <span aria-hidden="true">·</span>
       <a
         className="legal-link"

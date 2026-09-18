@@ -7,7 +7,7 @@ export const SITE = {
     "Not the first cat on AAPL. Live: AAPL pair and a community vault. The directional hook is later. Unaudited. Not a payout.",
   domain: "meowton.lol",
   url: "https://meowton.lol",
-  xHandle: null as string | null,
+  xHandle: "MeowtonLOL",
   launchAt: null as number | null,
   chainId: 4663,
   chainName: "Robinhood Chain",
@@ -46,7 +46,7 @@ export const SITE = {
     image: "/x/logo.png",
     website: "https://meowton.lol",
     description:
-      "He required an apple. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. Not the first cat on AAPL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
+      "He required an apple. $MEOWTON is paired with tokenized $AAPL on Robinhood Chain. x.com/MeowtonLOL. Unaudited. Not a payout. Not affiliated with Apple, Robinhood, or Long Inc.",
   },
 } as const;
 
@@ -110,6 +110,10 @@ export const FEES: Record<
 };
 
 export const FEE_ORDER: FeeMode[] = ["sleep", "fall", "rise"];
+
+export function xUrl() {
+  return `https://x.com/${SITE.xHandle}`;
+}
 
 export function explorerAddress(addr: string) {
   return `${SITE.explorer}/address/${addr}`;

@@ -120,7 +120,7 @@ function BasketPage() {
         </div>
         <p className="listing-blurb">{SITE.listing.description}</p>
         <p className="fine mt-3">
-          Image · {SITE.listing.image} · X pending
+          Image · {SITE.listing.image} · @{SITE.xHandle}
         </p>
 
         <h2 className="mt-10 font-display text-xl font-medium text-ink">

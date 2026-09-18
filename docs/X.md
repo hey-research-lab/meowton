@@ -18,7 +18,7 @@ Dosyalar `public/x/`.
 
 **Display name:** `MEOWTON`
 
-**Handle:** `@meowton` — doluysa `@meowtonxyz`
+**Handle:** [@MeowtonLOL](https://x.com/MeowtonLOL)
 
 **Location:** `Robinhood Chain`
 
@@ -49,6 +49,7 @@ The live thing is the pair — and a community vault that can fill with AAPL.
 
 Gravity was a rumor.
 
+@MeowtonLOL
 meowton.lol
 ```
 
