@@ -203,6 +203,7 @@ export function generateOrchard(): OrchardData {
     }
   };
 
+  addTree(CX - 2, CZ - 2, 6, 2.55);
   addTree(CX - 4, CZ - 4, 7, 3.05);
   addTree(CX + 6, CZ - 5, 6, 2.9);
   addTree(CX, CZ - 8, 8, 3.2);
@@ -228,8 +229,8 @@ export function generateOrchard(): OrchardData {
   set(CX - 10, 4, CZ - 2, BLOCK.STONE);
   set(CX - 10, 5, CZ - 2, BLOCK.GOLD);
 
-  const cat = { x: 0, y: 3 * S, z: 2.6 };
-  const drop = { x: 0.4, y: 6.6, z: 1.4 };
+  const cat = { x: -0.5, y: 3 * S, z: 0.95 };
+  const drop = { x: -0.2, y: 4.45, z: -0.55 };
 
   return { blocks, appleSpawns, drop, cat, groundY: 3 * S };
 }
