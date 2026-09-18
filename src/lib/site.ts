@@ -6,7 +6,7 @@ export const SITE = {
   community: "The onchain $AAPL community.",
   chartLine: "Every iPhone sold is our chart.",
   field:
-    "Not the first cat on AAPL. Live: AAPL pair and a community vault. The directional hook is later. Unaudited. Not a payout.",
+    "Not the first cat on AAPL. Live: AAPL pair on LONG. The directional hook is later. Unaudited. Not a payout.",
   domain: "meowton.lol",
   url: "https://meowton.lol",
   xHandle: "MeowtonLOL",
@@ -26,7 +26,17 @@ export const SITE = {
   poolManager: "0x8366a39CC670B4001A1121B8F6A443A643e40951",
   tokenCa: "0x21676bE78C8C0c8F639bAc5238a4a13B0e111e18" as string | null,
   hookCa: null as string | null,
+  /** v4 has no pair contract. Identity is PoolId in PoolManager. */
   poolCa: null as string | null,
+  poolId:
+    "0xdd17640f67760b5a5c859a299635af0b7f718fcecb4172489030c8c87d3f8ea8" as
+      | string
+      | null,
+  createTx:
+    "0x4137e82b4543b08ccee3c3376785c5ab3fad5092df494aef9fa09d8cff209530" as
+      | string
+      | null,
+  /** Airlock timelock/governance came back 0xdead. No unique vault. */
   basketCa: null as string | null,
   staleSec: 15 * 60,
   feedDecimals: 8,
@@ -41,7 +51,8 @@ export const SITE = {
     create: "https://app.long.xyz",
     termsEffective: "8 September 2026",
     contact: "info@long.xyz",
-    factory: "0x22e99278308b393ea1260859b181ad7e78f5eeed",
+    factory: "0x1Eef016F22A943abC7DD11422EDeE9D235942104",
+    factoryLegacy: "0x22e99278308b393ea1260859b181ad7e78f5eeed",
     airlock: "0xeb7c034704ef8dcd2d32324c1545f62fb4ad0862",
     hook: "0x4e3468951d49f2eea976ed0d6e75ffcb44a9a544",
   },
@@ -121,6 +132,10 @@ export const FEE_ORDER: FeeMode[] = ["sleep", "fall", "rise"];
 
 export function xUrl() {
   return `https://x.com/${SITE.xHandle}`;
+}
+
+export function explorerTx(hash: string) {
+  return `${SITE.explorer}/tx/${hash}`;
 }
 
 export function explorerAddress(addr: string) {

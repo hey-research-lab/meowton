@@ -44,7 +44,8 @@ community vault. No merkle, no keeper, no airdrop, no caller payout.
 | PoolManager | `0x8366a39CC670B4001A1121B8F6A443A643e40951` |
 | Pad | https://app.long.xyz |
 | MEOWTON | `0x21676bE78C8C0c8F639bAc5238a4a13B0e111e18` |
-| hook / pool / basket | pending |
+| v4 PoolId | `0xdd17640f67760b5a5c859a299635af0b7f718fcecb4172489030c8c87d3f8ea8` |
+| hook / basket | pending — no unique vault on the receipt |
 
 No fabricated pool or vault addresses. Wire them in `src/lib/site.ts` when they exist.
 

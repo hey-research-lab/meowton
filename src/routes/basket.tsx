@@ -3,6 +3,7 @@ import { CopyText } from "@/components/copy-text";
 import { LegalFoot } from "@/components/legal-foot";
 import {
   explorerAddress,
+  explorerTx,
   HOLD,
   isCanonicalLong,
   longTradeUrl,
@@ -64,13 +65,12 @@ function BasketPage() {
       <h1 className="paper-title">Create on LONG. Catch later.</h1>
       <div className="paper-body">
         <p>
-          Launch is on {SITE.pad.name}, pair {SITE.listing.quote}. Community
-          mode on. The whole {SITE.listing.supply} supply goes into the pool.
-          The creator receives no tokens. Fees that can sit in AAPL go to
-          their vault — the basket on this pad. Addresses for {SITE.ticker}{" "}
-          stay pending until the receipt exists. No fake CA. No pre-deployed
-          ERC-20, no custom hook, no extra contract before you sign — LONG’s
-          factory emits token, pool, Airlock and vault in that transaction.
+          Launch is on {SITE.pad.name}, pair {SITE.listing.quote}. The whole{" "}
+          {SITE.listing.supply} supply went into a Uniswap v4 pool. The book
+          lives in PoolManager — there is no pair contract to paste. Airlock
+          did not emit a unique community vault on this receipt (timelock and
+          governance came back dead). No invented basket CA. Fees, if they
+          sit in AAPL, sit with the pad until a vault exists.
         </p>
         <p className="mt-4">{HOLD.thesis}</p>
         <ul className="hold-not">
@@ -83,12 +83,16 @@ function BasketPage() {
           Live · $AAPL holdings
         </h2>
         <p className="mt-2 text-sm text-muted">
-          Same board $AI runs for NVDA. Numbers stay dry until the vault
-          address exists. Invented shares would be a different product.
+          Vault AAPL stays dry until a unique vault address exists. The v4
+          pool is live; invented shares would be a different product.
         </p>
         <dl className="stat-grid mt-2">
           <Row label="Community vault" value={SITE.basketCa ? "—" : null} />
-          <Row label="Liquidity pools" value={SITE.poolCa ? "—" : null} />
+          <Row
+            label="v4 pool"
+            value={SITE.poolId ? "Uniswap v4 · PoolManager" : null}
+            href={SITE.createTx ? explorerTx(SITE.createTx) : null}
+          />
           <Row
             label="Canonical 1e18"
             value={
@@ -161,8 +165,17 @@ function BasketPage() {
             href={trade}
           />
           <Addr label="Token" value={SITE.tokenCa} />
-          <Addr label="Pool" value={SITE.poolCa} />
+          <Row
+            label="PoolId"
+            value={SITE.poolId ? shorten(SITE.poolId) : null}
+            href={SITE.createTx ? explorerTx(SITE.createTx) : null}
+          />
           <Addr label="Basket / vault" value={SITE.basketCa} />
+          <Row
+            label="Create tx"
+            value={SITE.createTx ? shorten(SITE.createTx) : null}
+            href={SITE.createTx ? explorerTx(SITE.createTx) : null}
+          />
           <Addr label="Our hook" value={SITE.hookCa} />
         </dl>
 

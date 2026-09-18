@@ -204,10 +204,14 @@ export function InvestorDesk() {
               label="Vault"
               value={SITE.basketCa ? shorten(SITE.basketCa) : "pending"}
             />
-            <Stat label="Pool" value={SITE.poolCa ? shorten(SITE.poolCa) : "pending"} />
+            <Stat
+              label="Pool"
+              value={SITE.poolId ? `v4 ${shorten(SITE.poolId)}` : "pending"}
+            />
           </dl>
           <p className="desk-note">
-            Community vault fills from fees after LONG create. Dry until the receipt.
+            Book is Uniswap v4 in PoolManager. No unique vault on this receipt.
+            Don’t invent a basket CA.
           </p>
         </div>
       ) : null}
