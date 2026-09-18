@@ -1,29 +1,28 @@
 import { useEffect } from "react";
-import { COATS, readStoredCoat } from "@/lib/cats";
+import { JACKETS, readStoredJacket } from "@/lib/jackets";
 import { useNewton } from "@/lib/newton";
 
 export function CatPicker() {
-  const coat = useNewton((s) => s.coat);
-  const setCoat = useNewton((s) => s.setCoat);
+  const jacket = useNewton((s) => s.jacket);
+  const setJacket = useNewton((s) => s.setJacket);
 
   useEffect(() => {
-    const stored = readStoredCoat();
-    if (stored !== useNewton.getState().coat) setCoat(stored);
-  }, [setCoat]);
+    const stored = readStoredJacket();
+    if (stored !== useNewton.getState().jacket) setJacket(stored);
+  }, [setJacket]);
 
   return (
-    <div className="coat-row" role="group" aria-label="Cat coat">
-      <span className="coat-label">Coat</span>
-      {COATS.map((item) => (
+    <div className="coat-row" role="group" aria-label="Jacket color">
+      {JACKETS.map((item) => (
         <button
           key={item.id}
           type="button"
           className="coat-swatch"
           aria-label={item.label}
-          aria-pressed={coat === item.id}
+          aria-pressed={jacket === item.id}
           title={item.label}
           style={{ background: item.swatch }}
-          onClick={() => setCoat(item.id)}
+          onClick={() => setJacket(item.id)}
         />
       ))}
     </div>

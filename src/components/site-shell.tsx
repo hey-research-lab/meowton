@@ -19,80 +19,62 @@ const NAV = [
   { to: "/basket", label: "Basket" },
 ] as const;
 
-function Chrome() {
+function TickerBar() {
   const aapl = useAapl();
   const mode = aapl.data?.mode ?? "sleep";
   const price = aapl.data?.price;
   const trade = SITE.tokenCa ? longTradeUrl(SITE.tokenCa) : null;
+  const line = [
+    SITE.pair,
+    price != null ? formatUsd(price) : "—",
+    MODE_LABEL[mode],
+    SITE.launchAt ? formatTMinus() : null,
+    trade ? "TRADE" : "CA PENDING",
+  ]
+    .filter(Boolean)
+    .join("   ·   ")
+    .toUpperCase();
 
+  return (
+    <div className="ticker-bar">
+      <div className="ticker-marquee" aria-label="Live feed">
+        <div className="ticker-track">
+          <span>{line}</span>
+          <span aria-hidden="true">{line}</span>
+          <span aria-hidden="true">{line}</span>
+        </div>
+      </div>
+      <nav className="nav-row" aria-label="Site">
+        {NAV.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="nav-link"
+            activeOptions={{ exact: true }}
+          >
+            {item.label}
+          </Link>
+        ))}
+        {SITE.xHandle ? (
+          <a
+            className="nav-link"
+            href={`https://x.com/${SITE.xHandle}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            X
+          </a>
+        ) : null}
+      </nav>
+    </div>
+  );
+}
+
+function Chrome() {
   return (
     <header className="site-chrome">
       <div className="chrome-stack">
-        <div className="chrome-bar">
-          <div className="hud-row" aria-label="Live feed">
-            <Link to="/" className="font-medium text-ink no-underline">
-              {SITE.pair}
-            </Link>
-            <span className="hud-dot">·</span>
-            <span className="tabular-nums">
-              {price != null ? formatUsd(price) : "—"}
-            </span>
-            <span className="hud-dot">·</span>
-            <span
-              className="mode-chip"
-              data-mode={mode}
-              title="Orchard weather. Not the pad fee."
-            >
-              <i aria-hidden="true" />
-              {MODE_LABEL[mode]}
-            </span>
-            {SITE.launchAt ? (
-              <>
-                <span className="hud-dot">·</span>
-                <span className="tabular-nums">{formatTMinus()}</span>
-              </>
-            ) : null}
-            <span className="hud-dot">·</span>
-            {trade ? (
-              <a
-                className="hud-trade"
-                href={trade}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Trade
-              </a>
-            ) : (
-              <span>CA pending</span>
-            )}
-          </div>
-          <nav className="nav-row" aria-label="Site">
-            {NAV.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="nav-link"
-                activeOptions={{ exact: true }}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {SITE.xHandle ? (
-              <a
-                className="nav-link"
-                href={`https://x.com/${SITE.xHandle}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                X
-              </a>
-            ) : (
-              <span className="nav-link nav-link-muted" title="Handle pending">
-                X
-              </span>
-            )}
-          </nav>
-        </div>
+        <TickerBar />
         <CatPicker />
       </div>
     </header>
@@ -110,7 +92,6 @@ function Foot({ home }: { home: boolean }) {
         <div className="foot-brand">
           <TitleTag className="foot-title">{SITE.tagline}</TitleTag>
           <p className="foot-lede">Gravity was a rumor.</p>
-          {home ? <p className="foot-lede">{SITE.community}</p> : null}
         </div>
         <div className="foot-meta">
           {home ? (

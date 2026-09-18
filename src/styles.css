@@ -3,16 +3,16 @@
 @theme {
   --color-ink: #1c1410;
   --color-ink-soft: #3a2e26;
-  --color-parchment: #f4ead8;
+  --color-parchment: #f7f5ef;
   --color-parchment-deep: #e8d9c0;
   --color-apple: #c41e3a;
   --color-leaf: #3d6b3a;
   --color-gold: #c4a35a;
   --color-muted: #7a6a58;
-  --color-background: #f4ead8;
+  --color-background: #f7f5ef;
   --color-foreground: #1c1410;
   --color-border: rgb(28 20 16 / 0.12);
-  --color-card: rgb(244 234 216 / 0.92);
+  --color-card: rgb(247 245 239 / 0.94);
 
   --font-sans: "Fraunces", ui-serif, Georgia, serif;
   --font-display: "Fraunces", ui-serif, Georgia, serif;
@@ -87,11 +87,11 @@
     background:
       linear-gradient(
         to bottom,
-        rgb(244 234 216 / 0.88) 0%,
-        rgb(244 234 216 / 0.28) 12%,
+        rgb(247 245 239 / 0.88) 0%,
+        rgb(247 245 239 / 0.28) 12%,
         transparent 26%,
         transparent 78%,
-        rgb(244 234 216 / 0.22) 100%
+        rgb(247 245 239 / 0.22) 100%
       );
   }
 
@@ -127,18 +127,54 @@
     gap: 8px;
   }
 
+  .ticker-bar,
   .chrome-bar {
     pointer-events: auto;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px 20px;
+    gap: 8px 16px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: rgb(244 234 216 / 0.94);
+    background: rgb(247 245 239 / 0.94);
     box-shadow: var(--shadow-paper);
-    padding: 10px 14px;
+    padding: 8px 12px 8px 0;
+    overflow: hidden;
+  }
+
+  .ticker-marquee {
+    flex: 1 1 12rem;
+    min-width: 0;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 3.5rem;
+    width: max-content;
+    animation: ticker-x 28s linear infinite;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-hud);
+    text-transform: uppercase;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+
+  .ticker-track span {
+    padding-left: 16px;
+  }
+
+  @keyframes ticker-x {
+    from { transform: translateX(0); }
+    to { transform: translateX(-33.333%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
   }
 
   .hud-row {
@@ -197,9 +233,11 @@
   }
 
   @media (max-width: 639px) {
+    .ticker-bar,
     .chrome-bar {
       flex-direction: column;
       align-items: stretch;
+      padding: 8px 10px;
     }
 
     .nav-row {
@@ -249,7 +287,7 @@
     gap: 6px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: rgb(244 234 216 / 0.94);
+    background: rgb(247 245 239 / 0.94);
     box-shadow: var(--shadow-paper);
     padding: 6px 10px;
     width: fit-content;
@@ -317,7 +355,7 @@
     gap: 8px 20px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: rgb(244 234 216 / 0.94);
+    background: rgb(247 245 239 / 0.94);
     box-shadow: var(--shadow-paper);
     padding: 10px 16px;
   }
