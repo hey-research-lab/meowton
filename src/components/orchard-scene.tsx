@@ -115,7 +115,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   scene.background = new THREE.Color(0xf4ead8);
   scene.fog = new THREE.Fog(0xf4ead8, 22, 52);
 
-  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 80);
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.25, 80);
 
   const hemi = new THREE.HemisphereLight(0xf3ead4, 0x3d6b3a, 0.72);
   scene.add(hemi);
@@ -223,13 +223,13 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let catVy = 0;
   let jumping = false;
   let dir: 1 | -1 = 1;
-  let yaw = 0;
-  let orbit = 0.22;
+  let yaw = Math.PI;
+  let orbit = 0;
   let pointerX = 0;
   let pointerY = 0;
   const groundY = orchard.groundY;
 
-  const CAT_SCALE = 0.11;
+  const CAT_SCALE = 0.09;
   const HEAD_FWD = 9.2;
   const HEAD_UP = 8.6;
   // Standing model faces −Z at yaw 0.
@@ -513,20 +513,20 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     const sy = shake * 0.22 * Math.sin(t * 31.7);
     const sz = shake * 0.16 * Math.sin(t * 23.3);
 
-    if (!reduced) orbit += dt * 0.06;
-    // Wiki isometric: above, front-right of a −Z-facing cat.
-    const yawCam = -2.35 + Math.sin(orbit) * 0.05;
-    const radius = window.innerWidth < 700 ? 5.6 : 6.1;
-    const height = window.innerWidth < 700 ? 4.2 : 4.55;
-    const ox = catX + Math.sin(yawCam) * radius + pointerX * 0.35;
-    const oz = catZ + Math.cos(yawCam) * radius + pointerY * 0.12;
+    if (!reduced) orbit += dt * 0.04;
+    // Clearing is +Z. Camera stays there — wiki 3/4, trees behind the cat.
+    const yawCam = 0.7 + Math.sin(orbit) * 0.04;
+    const radius = window.innerWidth < 700 ? 8.4 : 9.4;
+    const height = window.innerWidth < 700 ? 5.0 : 5.6;
+    const ox = catX + Math.sin(yawCam) * radius + pointerX * 0.25;
+    const oz = catZ + Math.cos(yawCam) * radius + pointerY * 0.08;
     camera.up.set(0, 1, 0);
     camera.position.set(
       ox + sx,
-      groundY + height + pointerY * -0.08 + sy,
+      groundY + height + pointerY * -0.06 + sy,
       oz + sz,
     );
-    look.set(catX, groundY + 1.15 + catY * 0.15, catZ - 0.4);
+    look.set(catX, groundY + 0.7 + catY * 0.2, catZ + 0.15);
     camera.lookAt(look);
     camera.rotation.z = shake * 0.03 * Math.sin(t * 19.0);
 

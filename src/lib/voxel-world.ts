@@ -228,8 +228,8 @@ export function generateOrchard(): OrchardData {
   set(CX - 10, 4, CZ - 2, BLOCK.STONE);
   set(CX - 10, 5, CZ - 2, BLOCK.GOLD);
 
-  const cat = { x: 0, y: 3 * S, z: 1.15 };
-  const drop = { x: 0.55, y: 6.6, z: 1.15 };
+  const cat = { x: 0, y: 3 * S, z: 2.6 };
+  const drop = { x: 0.4, y: 6.6, z: 1.4 };
 
   return { blocks, appleSpawns, drop, cat, groundY: 3 * S };
 }
