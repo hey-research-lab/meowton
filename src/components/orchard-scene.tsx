@@ -115,7 +115,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   scene.background = new THREE.Color(0xf4ead8);
   scene.fog = new THREE.Fog(0xf4ead8, 22, 52);
 
-  const camera = new THREE.PerspectiveCamera(44, 1, 0.2, 80);
+  const camera = new THREE.PerspectiveCamera(48, 1, 0.2, 80);
 
   const hemi = new THREE.HemisphereLight(0xf3ead4, 0x3d6b3a, 0.72);
   scene.add(hemi);
@@ -516,8 +516,8 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     if (!reduced) orbit += dt * 0.05;
     // From the clearing, looking into the orchard — cat in front, apples in canopy.
     const yawCam = 0.88 + Math.sin(orbit) * 0.05;
-    const radius = window.innerWidth < 700 ? 6.1 : 6.8;
-    const height = window.innerWidth < 700 ? 2.55 : 2.95;
+    const radius = window.innerWidth < 700 ? 8.0 : 8.9;
+    const height = window.innerWidth < 700 ? 3.15 : 3.6;
     const ox = Math.sin(yawCam) * radius + pointerX * 0.4;
     const oz = Math.cos(yawCam) * radius + 1.35 + pointerY * 0.12;
     camera.up.set(0, 1, 0);
