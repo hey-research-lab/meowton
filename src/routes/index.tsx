@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { HomeRails } from "@/components/home-rails";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -8,5 +9,5 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  return null;
+  return <HomeRails />;
 }

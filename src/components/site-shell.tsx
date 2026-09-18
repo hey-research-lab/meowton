@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { CatPicker } from "@/components/cat-picker";
+import { ConnectButton } from "@/components/connect-button";
 import { LegalFoot } from "@/components/legal-foot";
 import { OrchardScene } from "@/components/orchard-scene";
 import { requestOrchardTap, useNewton } from "@/lib/newton";
@@ -65,6 +66,7 @@ function TickerBar() {
             X
           </a>
         ) : null}
+        <ConnectButton compact />
       </nav>
     </div>
   );
