@@ -49,9 +49,9 @@ function makeSky(THREE: Three) {
   for (let i = 0; i < pos.count; i++) {
     const y = pos.getY(i);
     const t = Math.min(1, Math.max(0, (y + 8) / 28));
-    const r = 0.96 * (1 - t) + 0.82 * t;
-    const g = 0.91 * (1 - t) + 0.86 * t;
-    const b = 0.8 * (1 - t) + 0.84 * t;
+    const r = 0.97 * (1 - t) + 0.86 * t;
+    const g = 0.9 * (1 - t) + 0.82 * t;
+    const b = 0.72 * (1 - t) + 0.78 * t;
     col[i * 3] = r;
     col[i * 3 + 1] = g;
     col[i * 3 + 2] = b;
@@ -113,22 +113,22 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf4ead8);
-  scene.fog = new THREE.Fog(0xf4ead8, 28, 64);
+  scene.fog = new THREE.Fog(0xf0e2c4, 18, 46);
 
-  const camera = new THREE.PerspectiveCamera(40, 1, 0.2, 80);
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.2, 90);
 
-  const hemi = new THREE.HemisphereLight(0xf7ead4, 0x4a6e38, 0.85);
+  const hemi = new THREE.HemisphereLight(0xffe8c8, 0x4a6e38, 0.9);
   scene.add(hemi);
-  const sun = new THREE.DirectionalLight(0xffe2b0, 2.35);
-  sun.position.set(14, 13, 5);
+  const sun = new THREE.DirectionalLight(0xffd89a, 2.4);
+  sun.position.set(16, 11, 6);
   sun.castShadow = !reduced;
   sun.shadow.mapSize.set(reduced ? 512 : 1536, reduced ? 512 : 1536);
   sun.shadow.camera.near = 2;
-  sun.shadow.camera.far = 40;
-  sun.shadow.camera.left = -14;
-  sun.shadow.camera.right = 14;
-  sun.shadow.camera.top = 12;
-  sun.shadow.camera.bottom = -8;
+  sun.shadow.camera.far = 50;
+  sun.shadow.camera.left = -18;
+  sun.shadow.camera.right = 18;
+  sun.shadow.camera.top = 16;
+  sun.shadow.camera.bottom = -10;
   sun.shadow.bias = -0.0008;
   scene.add(sun);
   scene.add(new THREE.AmbientLight(0xf4ead8, 0.22));
@@ -223,13 +223,13 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let catVy = 0;
   let jumping = false;
   let dir: 1 | -1 = 1;
-  let yaw = 2.72;
+  let yaw = 2.85;
   let orbit = 0;
   let pointerX = 0;
   let pointerY = 0;
   const groundY = orchard.groundY;
 
-  const CAT_SCALE = 0.125;
+  const CAT_SCALE = 0.11;
   const HEAD_FWD = 9.2;
   const HEAD_UP = 8.6;
   // Standing model faces −Z at yaw 0.
@@ -513,20 +513,20 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     const sy = shake * 0.22 * Math.sin(t * 31.7);
     const sz = shake * 0.16 * Math.sin(t * 23.3);
 
-    if (!reduced) orbit += dt * 0.02;
-    // Banner lock: cat left, canopy right, apple in the air.
-    const yawCam = 1.08 + Math.sin(orbit) * 0.02;
-    const radius = window.innerWidth < 700 ? 5.6 : 6.4;
-    const height = window.innerWidth < 700 ? 2.25 : 2.5;
-    const ox = Math.sin(yawCam) * radius + 0.55 + pointerX * 0.22;
-    const oz = Math.cos(yawCam) * radius + 1.7 + pointerY * 0.08;
+    if (!reduced) orbit += dt * 0.015;
+    // Banner landscape: full cat, path, round green canopies, sky.
+    const yawCam = 0.52 + Math.sin(orbit) * 0.015;
+    const radius = window.innerWidth < 700 ? 8.6 : 10.2;
+    const height = window.innerWidth < 700 ? 2.05 : 2.2;
+    const ox = Math.sin(yawCam) * radius + 0.8 + pointerX * 0.2;
+    const oz = Math.cos(yawCam) * radius + 3.4 + pointerY * 0.08;
     camera.up.set(0, 1, 0);
     camera.position.set(
       ox + sx,
-      groundY + height + pointerY * -0.05 + sy,
+      groundY + height + pointerY * -0.04 + sy,
       oz + sz,
     );
-    look.set(0.55, groundY + 2.05, -0.85);
+    look.set(1.6, groundY + 1.55, -2.8);
     camera.lookAt(look);
     camera.rotation.z = shake * 0.03 * Math.sin(t * 19.0);
 

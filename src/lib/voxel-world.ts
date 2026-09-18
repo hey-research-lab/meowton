@@ -40,7 +40,7 @@ const PALETTE: Record<number, [number, number, number]> = {
   [BLOCK.MOSS]: [0.4, 0.52, 0.28],
 };
 
-const GRASS_TOP: [number, number, number] = [0.31, 0.52, 0.275];
+const GRASS_TOP: [number, number, number] = [0.5, 0.66, 0.3];
 
 const FACES: {
   d: [number, number, number];
@@ -179,59 +179,68 @@ export function generateOrchard(): OrchardData {
     radius: number,
   ) => {
     const top = 3 + trunkH;
-    for (let y = 3; y < top; y++) set(tx, y, tz, BLOCK.WOOD);
-    set(tx, top, tz, BLOCK.WOOD);
-    for (let y = top - 2; y <= top + 2; y++) {
-      const yr = 1 - Math.abs(y - top) / 3;
-      const r = Math.max(1, Math.round(radius * yr + 0.2));
-      for (let dz = -r; dz <= r; dz++) {
-        for (let dx = -r; dx <= r; dx++) {
-          const dist = Math.hypot(dx, dz, (y - top) * 0.85);
-          if (dist > radius + 0.15) continue;
+    for (let y = 3; y <= top; y++) set(tx, y, tz, BLOCK.WOOD);
+    const cy = top + 1;
+    const rMax = Math.ceil(radius);
+    for (let y = cy - rMax; y <= cy + rMax; y++) {
+      for (let dz = -rMax; dz <= rMax; dz++) {
+        for (let dx = -rMax; dx <= rMax; dx++) {
+          const dist = Math.hypot(dx, dz, (y - cy) * 0.92);
+          if (dist > radius) continue;
           if (dx === 0 && dz === 0 && y <= top) continue;
           const n = hash3(tx + dx, y, tz + dz);
-          if (n < 0.12) continue;
-          const leaf = n > 0.55 ? BLOCK.LEAF_LIT : BLOCK.LEAF;
-          set(tx + dx, y, tz + dz, leaf);
-          if (n > 0.48 && y <= top && dist > 0.7 && dist < radius * 0.98) {
-            set(tx + dx, y - 1, tz + dz, BLOCK.APPLE);
-            appleSpawns.push(toWorld(tx + dx, y - 1, tz + dz));
+          if (n < 0.14) continue;
+          const outer = dist > radius - 0.85;
+          if (outer && n > 0.9) {
+            set(tx + dx, y, tz + dz, BLOCK.APPLE);
+            appleSpawns.push(toWorld(tx + dx, y, tz + dz));
+          } else {
+            set(tx + dx, y, tz + dz, n > 0.55 ? BLOCK.LEAF_LIT : BLOCK.LEAF);
           }
         }
       }
     }
   };
 
-  addTree(CX + 3, CZ - 1, 6, 2.7);
-  addTree(CX + 7, CZ - 3, 7, 3.0);
-  addTree(CX - 2, CZ - 2, 6, 2.55);
-  addTree(CX - 4, CZ - 4, 7, 3.05);
-  addTree(CX + 6, CZ - 5, 6, 2.9);
-  addTree(CX, CZ - 8, 8, 3.2);
-  addTree(CX - 11, CZ - 9, 5, 3);
-  addTree(CX + 12, CZ - 10, 6, 3.2);
-  addTree(CX - 16, CZ - 5, 5, 2.8);
-  addTree(CX + 16, CZ - 6, 5, 2.8);
-  addTree(CX - 8, CZ - 14, 4, 2.6);
-  addTree(CX + 8, CZ - 15, 5, 2.8);
-
-  for (const [bx, bz] of [
-    [CX - 16, CZ + 5],
-    [CX + 16, CZ + 6],
-    [CX - 18, CZ + 8],
-    [CX + 17, CZ + 9],
-  ] as const) {
+  const addBush = (bx: number, bz: number) => {
     set(bx, 3, bz, BLOCK.LEAF);
-    set(bx, 4, bz, hash2(bx, bz) > 0.5 ? BLOCK.LEAF_LIT : BLOCK.LEAF);
-    if (hash2(bx, bz) > 0.4) set(bx, 3, bz + 1, BLOCK.LEAF);
+    if (hash2(bx, bz) > 0.4) set(bx, 4, bz, BLOCK.LEAF_LIT);
+    if (hash2(bx + 1, bz) > 0.45) set(bx + 1, 3, bz, BLOCK.LEAF);
+  };
+
+  for (const [tx, tz, h, r] of [
+    [CX + 6, CZ - 6, 5, 2.35],
+    [CX + 11, CZ - 5, 6, 2.55],
+    [CX + 16, CZ - 8, 5, 2.4],
+    [CX - 5, CZ - 7, 5, 2.3],
+    [CX - 10, CZ - 9, 5, 2.25],
+    [CX, CZ - 11, 6, 2.5],
+    [CX + 8, CZ - 12, 5, 2.35],
+    [CX - 7, CZ - 13, 4, 2.2],
+    [CX + 14, CZ - 14, 5, 2.4],
+    [CX - 14, CZ - 11, 4, 2.15],
+    [CX + 4, CZ - 16, 5, 2.3],
+    [CX - 3, CZ - 18, 4, 2.2],
+    [CX + 10, CZ - 19, 5, 2.35],
+  ] as const) {
+    addTree(tx, tz, h, r);
   }
 
-  set(CX - 10, 3, CZ - 2, BLOCK.STONE);
-  set(CX - 10, 4, CZ - 2, BLOCK.STONE);
-  set(CX - 10, 5, CZ - 2, BLOCK.GOLD);
+  for (const [bx, bz] of [
+    [CX - 4, CZ + 3],
+    [CX + 5, CZ + 2],
+    [CX - 8, CZ + 1],
+    [CX + 8, CZ + 4],
+    [CX + 3, CZ - 3],
+    [CX - 6, CZ - 2],
+    [CX + 13, CZ - 2],
+    [CX - 12, CZ + 2],
+  ] as const) {
+    addBush(bx, bz);
+  }
 
-  const cat = { x: -1.05, y: 3 * S, z: 0.85 };
-  const drop = { x: 1.15, y: 3.85, z: 0.15 };
+  const cat = { x: -1.45, y: 3 * S, z: 2.15 };
+  const drop = { x: 2.35, y: 3.55, z: -0.4 };
 
   return { blocks, appleSpawns, drop, cat, groundY: 3 * S };
 }
@@ -259,7 +268,7 @@ export function meshOrchard(THREE: Three, blocks: Uint8Array) {
           if (id === BLOCK.GRASS && face.d[1] > 0) {
             [cr, cg, cb] = GRASS_TOP;
           } else if (id === BLOCK.GRASS) {
-            [cr, cg, cb] = [0.27, 0.4, 0.2];
+            [cr, cg, cb] = [0.34, 0.5, 0.22];
           }
           const shade = face.shade * (1 + jitter);
           const r = Math.min(1, cr * shade);
