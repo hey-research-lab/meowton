@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { CAT_SLOTS, getCoat, type CatSlot, type Coat } from "@/lib/cats";
+import { applyCatTexture, buildMcCat, COAT_TEXTURE } from "@/lib/mc-cat";
 import { onOrchardTap, useNewton } from "@/lib/newton";
 import { generateOrchard, meshOrchard } from "@/lib/voxel-world";
 
@@ -38,79 +38,8 @@ type Particle = {
   b: number;
 };
 
-type BoxDef = {
-  x: number;
-  y: number;
-  z: number;
-  w: number;
-  h: number;
-  d: number;
-  slot: CatSlot;
-};
-
-type CatMatMap = Map<CatSlot, InstanceType<Three["MeshLambertMaterial"]>>;
-
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function box(
-  THREE: Three,
-  def: BoxDef,
-  materials: CatMatMap,
-  coat: Coat,
-) {
-  let mat = materials.get(def.slot);
-  if (!mat) {
-    mat = new THREE.MeshLambertMaterial({ color: coat[def.slot] });
-    materials.set(def.slot, mat);
-  }
-  const geo = new THREE.BoxGeometry(def.w, def.h, def.d);
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(def.x, def.y, def.z);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  return mesh;
-}
-
-function paintCat(materials: CatMatMap, coat: Coat) {
-  for (const slot of CAT_SLOTS) {
-    const mat = materials.get(slot);
-    if (mat) mat.color.setHex(coat[slot]);
-  }
-}
-
-function buildCat(THREE: Three, materials: CatMatMap, coat: Coat) {
-  const group = new THREE.Group();
-  const parts: BoxDef[] = [
-    { x: 0.02, y: 0.36, z: 0, w: 0.78, h: 0.44, d: 0.5, slot: "fur" },
-    { x: 0.08, y: 0.3, z: 0, w: 0.5, h: 0.28, d: 0.36, slot: "belly" },
-    { x: 0.0, y: 0.52, z: 0, w: 0.62, h: 0.1, d: 0.54, slot: "stripe" },
-    { x: -0.12, y: 0.4, z: 0, w: 0.18, h: 0.28, d: 0.54, slot: "stripe" },
-    { x: 0.42, y: 0.78, z: 0, w: 0.46, h: 0.42, d: 0.44, slot: "fur" },
-    { x: 0.42, y: 0.7, z: 0, w: 0.5, h: 0.22, d: 0.48, slot: "stripe" },
-    { x: 0.32, y: 1.04, z: -0.14, w: 0.14, h: 0.2, d: 0.12, slot: "stripe" },
-    { x: 0.32, y: 1.04, z: 0.14, w: 0.14, h: 0.2, d: 0.12, slot: "stripe" },
-    { x: 0.34, y: 1.06, z: -0.14, w: 0.08, h: 0.12, d: 0.06, slot: "muzzle" },
-    { x: 0.34, y: 1.06, z: 0.14, w: 0.08, h: 0.12, d: 0.06, slot: "muzzle" },
-    { x: 0.62, y: 0.7, z: 0, w: 0.2, h: 0.16, d: 0.28, slot: "muzzle" },
-    { x: 0.72, y: 0.7, z: 0, w: 0.08, h: 0.08, d: 0.1, slot: "nose" },
-    { x: 0.58, y: 0.86, z: -0.12, w: 0.08, h: 0.08, d: 0.08, slot: "muzzle" },
-    { x: 0.58, y: 0.86, z: 0.12, w: 0.08, h: 0.08, d: 0.08, slot: "muzzle" },
-    { x: 0.62, y: 0.86, z: -0.12, w: 0.05, h: 0.05, d: 0.05, slot: "eyes" },
-    { x: 0.62, y: 0.86, z: 0.12, w: 0.05, h: 0.05, d: 0.05, slot: "eyes2" },
-    { x: 0.64, y: 0.86, z: -0.12, w: 0.03, h: 0.03, d: 0.03, slot: "ink" },
-    { x: 0.64, y: 0.86, z: 0.12, w: 0.03, h: 0.03, d: 0.03, slot: "ink" },
-    { x: 0.28, y: 0.12, z: -0.16, w: 0.2, h: 0.16, d: 0.16, slot: "socks" },
-    { x: 0.28, y: 0.12, z: 0.16, w: 0.2, h: 0.16, d: 0.16, slot: "socks" },
-    { x: -0.28, y: 0.14, z: -0.16, w: 0.22, h: 0.18, d: 0.18, slot: "socks" },
-    { x: -0.28, y: 0.14, z: 0.16, w: 0.22, h: 0.18, d: 0.18, slot: "socks" },
-    { x: -0.48, y: 0.42, z: 0.02, w: 0.18, h: 0.16, d: 0.16, slot: "stripe" },
-    { x: -0.62, y: 0.58, z: 0.08, w: 0.16, h: 0.14, d: 0.14, slot: "fur" },
-    { x: -0.72, y: 0.74, z: 0.16, w: 0.14, h: 0.12, d: 0.12, slot: "tip" },
-  ];
-  for (const part of parts) group.add(box(THREE, part, materials, coat));
-  return group;
 }
 
 function makeSky(THREE: Three) {
@@ -210,15 +139,29 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   const terrain = meshOrchard(THREE, orchard.blocks);
   scene.add(terrain);
 
-  const catMats: CatMatMap = new Map();
-  const cat = buildCat(THREE, catMats, getCoat(useNewton.getState().coat));
+  const loader = new THREE.TextureLoader();
+  const coatCache = new Map<string, InstanceType<Three["Texture"]>>();
+  const loadCoat = (id: string) => {
+    const url = COAT_TEXTURE[id as keyof typeof COAT_TEXTURE] ?? COAT_TEXTURE.red;
+    const hit = coatCache.get(url);
+    if (hit) return hit;
+    const tex = loader.load(url);
+    tex.magFilter = THREE.NearestFilter;
+    tex.minFilter = THREE.NearestFilter;
+    tex.generateMipmaps = false;
+    tex.colorSpace = THREE.SRGBColorSpace;
+    coatCache.set(url, tex);
+    return tex;
+  };
+  const mcCat = buildMcCat(THREE, loadCoat(useNewton.getState().coat));
+  const cat = mcCat.root;
   cat.position.set(orchard.cat.x, orchard.cat.y, orchard.cat.z);
   scene.add(cat);
   let lastCoat = useNewton.getState().coat;
   const unCoat = useNewton.subscribe((state) => {
     if (state.coat === lastCoat) return;
     lastCoat = state.coat;
-    paintCat(catMats, getCoat(state.coat));
+    applyCatTexture(mcCat.material, loadCoat(state.coat), THREE);
   });
 
   const appleGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4);
@@ -286,10 +229,12 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let pointerY = 0;
   const groundY = orchard.groundY;
 
-  const CAT_SCALE = 1.7;
-  const headX = () => catX + Math.cos(yaw) * 0.42 * CAT_SCALE;
-  const headY = () => groundY + catY + 0.82 * CAT_SCALE;
-  const headZ = () => catZ - Math.sin(yaw) * 0.42 * CAT_SCALE;
+  const CAT_SCALE = 0.125;
+  const HEAD_FWD = 6.6;
+  const HEAD_UP = 10.6;
+  const headX = () => catX + Math.cos(yaw) * HEAD_FWD * CAT_SCALE;
+  const headY = () => groundY + catY + HEAD_UP * CAT_SCALE;
+  const headZ = () => catZ - Math.sin(yaw) * HEAD_FWD * CAT_SCALE;
 
   const spawnApple = (opts: {
     destined?: boolean;
@@ -614,11 +559,8 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     pMat.dispose();
     sky.geometry.dispose();
     (sky.material as InstanceType<Three["Material"]>).dispose();
-    cat.traverse((obj) => {
-      const mesh = obj as InstanceType<Three["Mesh"]>;
-      if (mesh.geometry) mesh.geometry.dispose();
-    });
-    for (const mat of catMats.values()) mat.dispose();
+    mcCat.dispose();
+    for (const tex of coatCache.values()) tex.dispose();
     renderer.dispose();
   };
 }
