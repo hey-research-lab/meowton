@@ -10,7 +10,7 @@ export const Route = createFileRoute("/privacy")({
       {
         name: "description",
         content:
-          "Privacy notice for the MEOWTON website. No accounts. No wallet on this site.",
+          "Privacy notice for the MEOWTON website. Optional wallet connect for balances. Trades on LONG.",
       },
     ],
   }),
@@ -41,9 +41,11 @@ function PrivacyPage() {
         <section className="legal-block">
           <h2>1. No account here</h2>
           <p>
-            This site has no sign-in, no embedded wallet, and no profile. We
-            do not ask for a name, email, or seed. We do not hold private
-            keys. We do not use Privy.
+            This site has no sign-in and no profile. Optional wallet connect
+            (MetaMask / OKX) only reads your public address and token balances
+            on {SITE.chainName}. We do not ask for a seed. We do not hold
+            private keys. Swaps happen on {SITE.pad.name}. We do not use Privy
+            on this site.
           </p>
         </section>
 
