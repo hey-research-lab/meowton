@@ -1,16 +1,11 @@
 import { useState } from "react";
 import { ConnectButton } from "@/components/connect-button";
-import { useAapl } from "@/lib/use-aapl";
 import { useHoldings, useVault } from "@/lib/use-holdings";
 import {
   explorerAddress,
   explorerToken,
-  formatAge,
-  formatPct,
-  formatUsd,
   HOLD,
   longTradeUrl,
-  MODE_LABEL,
   shorten,
   SITE,
 } from "@/lib/site";
@@ -38,8 +33,6 @@ async function copy(text: string) {
 export function InvestorDesk() {
   const [tab, setTab] = useState<Tab>("trade");
   const [flash, setFlash] = useState<string | null>(null);
-  const aapl = useAapl();
-  const snap = aapl.data;
   const address = useWallet((s) => s.address);
   const chainId = useWallet((s) => s.chainId);
   const holdings = useHoldings(address);
@@ -64,26 +57,10 @@ export function InvestorDesk() {
     <section className="desk" aria-label="Investor desk">
       <header className="desk-head">
         <div>
-          <p className="desk-kicker">Investor desk</p>
-          <h2 className="desk-title">Connect. Trade. Watch the basket.</h2>
+          <p className="desk-kicker">Desk</p>
+          <h2 className="desk-title">Trade the pair</h2>
         </div>
-        <ConnectButton compact />
       </header>
-
-      <dl className="desk-ticker" aria-label="AAPL print">
-        <Stat label="$AAPL" value={snap?.price != null ? formatUsd(snap.price) : "—"} />
-        <Stat
-          label="Move"
-          value={
-            snap?.deltaPct != null ? formatPct(snap.deltaPct) : "—"
-          }
-        />
-        <Stat label="Weather" value={MODE_LABEL[snap?.mode ?? "sleep"]} />
-        <Stat
-          label="Print age"
-          value={snap?.ageSec != null ? formatAge(snap.ageSec) : "—"}
-        />
-      </dl>
 
       <div className="desk-tabs" role="tablist" aria-label="Desk">
         {(["trade", "wallet", "vault"] as const).map((id) => (
