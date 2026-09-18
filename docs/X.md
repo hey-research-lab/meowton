@@ -9,7 +9,7 @@ Dosyalar `public/x/`.
 | Profil | [`logo.png`](../public/x/logo.png) | 800×800 |
 | Banner | [`banner.jpg`](../public/x/banner.jpg) | 1500×500 |
 | Cover | [`cover.jpg`](../public/x/cover.jpg) | 1500×600 |
-| İlk post görseli | [`first-post.jpg`](../public/x/first-post.jpg) | 1600×900 |
+| İlk post | [`first-post.jpg`](../public/x/first-post.jpg) | 1600×1067 (3:2) |
 | OG | [`og.jpg`](../public/og.jpg) | 1200×630 |
 
 ---
@@ -18,43 +18,50 @@ Dosyalar `public/x/`.
 
 **Display name:** `MEOWTON`
 
-**Handle (öneri):** `@meowton` — `meowton.lol` ile hizalı. Doluysa `@meowtonxyz`.
+**Handle:** `@meowton` — doluysa `@meowtonxyz`
 
 **Location:** `Robinhood Chain`
 
 **Website:** `https://meowton.lol`
 
-**Bio (104/160):**
+**Bio (paste):**
 
 ```
-He required an apple. $MEOWTON × $AAPL on Robinhood Chain. Gravity was a rumor. Unaudited. Not a payout.
+He required an apple. Gravity was a rumor.
+$MEOWTON × $AAPL · Robinhood Chain
+Unaudited. Not a payout.
+meowton.lol
 ```
 
 ---
 
-## İlk post
+## İlk post (pin)
 
-Görsel: `public/x/first-post.jpg`
+Görsel: `public/x/first-post.jpg` (3:2)
 
 ```
 He required an apple.
 
-$MEOWTON is paired with tokenized $AAPL on Robinhood Chain — not a USD pair.
+$MEOWTON × $AAPL on Robinhood Chain.
+
+Not the first cat on Apple.
+The live thing is the pair — and a community vault that can fill with AAPL.
 
 Gravity was a rumor.
 
 meowton.lol
 ```
 
-Pinned olarak bırak. CA gelince ikinci post: Trade link + CA. İlk postta adres uydurma.
+Pinned bırak. CA gelince ikinci post: Trade link + CA. İlk postta adres yok.
 
 ---
 
-## Kısa yedek (280 altı, görselsiz)
+## Yedek (görselsiz, 280 altı)
 
 ```
 He required an apple.
 
 $MEOWTON × $AAPL
+Gravity was a rumor.
 meowton.lol
 ```
