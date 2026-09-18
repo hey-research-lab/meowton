@@ -29,15 +29,15 @@ export type OrchardData = {
 };
 
 const PALETTE: Record<number, [number, number, number]> = {
-  [BLOCK.GRASS]: [0.24, 0.42, 0.227],
-  [BLOCK.DIRT]: [0.43, 0.29, 0.196],
-  [BLOCK.WOOD]: [0.345, 0.22, 0.137],
-  [BLOCK.LEAF]: [0.165, 0.345, 0.165],
-  [BLOCK.LEAF_LIT]: [0.29, 0.478, 0.22],
-  [BLOCK.APPLE]: [0.768, 0.118, 0.227],
-  [BLOCK.STONE]: [0.545, 0.478, 0.408],
-  [BLOCK.GOLD]: [0.768, 0.64, 0.353],
-  [BLOCK.MOSS]: [0.325, 0.455, 0.267],
+  [BLOCK.GRASS]: [0.45, 0.58, 0.32],
+  [BLOCK.DIRT]: [0.52, 0.36, 0.22],
+  [BLOCK.WOOD]: [0.42, 0.28, 0.16],
+  [BLOCK.LEAF]: [0.28, 0.5, 0.22],
+  [BLOCK.LEAF_LIT]: [0.4, 0.62, 0.26],
+  [BLOCK.APPLE]: [0.82, 0.16, 0.2],
+  [BLOCK.STONE]: [0.72, 0.64, 0.5],
+  [BLOCK.GOLD]: [0.8, 0.66, 0.36],
+  [BLOCK.MOSS]: [0.4, 0.52, 0.28],
 };
 
 const GRASS_TOP: [number, number, number] = [0.31, 0.52, 0.275];
@@ -162,14 +162,13 @@ export function generateOrchard(): OrchardData {
     }
   }
 
-  const pathZ0 = CZ + 1;
-  for (let z = pathZ0; z < WZ - 2; z++) {
+  const pathZ0 = CZ - 10;
+  for (let z = pathZ0; z < CZ + 10; z++) {
     for (let dx = -1; dx <= 1; dx++) {
       const x = CX + dx;
       const n = hash2(x, z);
-      if (dx !== 0 && n > 0.65) continue;
+      if (dx !== 0 && n > 0.7) continue;
       set(x, 2, z, BLOCK.STONE);
-      if (n > 0.82) set(x, 3, z, BLOCK.MOSS);
     }
   }
 
@@ -191,10 +190,10 @@ export function generateOrchard(): OrchardData {
           if (dist > radius + 0.15) continue;
           if (dx === 0 && dz === 0 && y <= top) continue;
           const n = hash3(tx + dx, y, tz + dz);
-          if (n < 0.16) continue;
-          const leaf = n > 0.62 ? BLOCK.LEAF_LIT : BLOCK.LEAF;
+          if (n < 0.12) continue;
+          const leaf = n > 0.55 ? BLOCK.LEAF_LIT : BLOCK.LEAF;
           set(tx + dx, y, tz + dz, leaf);
-          if (n > 0.62 && y <= top && dist > 0.85 && dist < radius * 0.95) {
+          if (n > 0.48 && y <= top && dist > 0.7 && dist < radius * 0.98) {
             set(tx + dx, y - 1, tz + dz, BLOCK.APPLE);
             appleSpawns.push(toWorld(tx + dx, y - 1, tz + dz));
           }
@@ -203,6 +202,8 @@ export function generateOrchard(): OrchardData {
     }
   };
 
+  addTree(CX + 3, CZ - 1, 6, 2.7);
+  addTree(CX + 7, CZ - 3, 7, 3.0);
   addTree(CX - 2, CZ - 2, 6, 2.55);
   addTree(CX - 4, CZ - 4, 7, 3.05);
   addTree(CX + 6, CZ - 5, 6, 2.9);
@@ -229,8 +230,8 @@ export function generateOrchard(): OrchardData {
   set(CX - 10, 4, CZ - 2, BLOCK.STONE);
   set(CX - 10, 5, CZ - 2, BLOCK.GOLD);
 
-  const cat = { x: -0.5, y: 3 * S, z: 0.95 };
-  const drop = { x: -0.2, y: 4.45, z: -0.55 };
+  const cat = { x: -1.05, y: 3 * S, z: 0.85 };
+  const drop = { x: 1.15, y: 3.85, z: 0.15 };
 
   return { blocks, appleSpawns, drop, cat, groundY: 3 * S };
 }

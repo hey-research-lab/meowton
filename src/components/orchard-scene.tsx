@@ -49,9 +49,9 @@ function makeSky(THREE: Three) {
   for (let i = 0; i < pos.count; i++) {
     const y = pos.getY(i);
     const t = Math.min(1, Math.max(0, (y + 8) / 28));
-    const r = 0.96 * (1 - t) + 0.72 * t;
-    const g = 0.9 * (1 - t) + 0.78 * t;
-    const b = 0.78 * (1 - t) + 0.86 * t;
+    const r = 0.96 * (1 - t) + 0.82 * t;
+    const g = 0.91 * (1 - t) + 0.86 * t;
+    const b = 0.8 * (1 - t) + 0.84 * t;
     col[i * 3] = r;
     col[i * 3 + 1] = g;
     col[i * 3 + 2] = b;
@@ -113,14 +113,14 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf4ead8);
-  scene.fog = new THREE.Fog(0xf4ead8, 22, 52);
+  scene.fog = new THREE.Fog(0xf4ead8, 28, 64);
 
-  const camera = new THREE.PerspectiveCamera(48, 1, 0.2, 80);
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.2, 80);
 
-  const hemi = new THREE.HemisphereLight(0xf3ead4, 0x3d6b3a, 0.72);
+  const hemi = new THREE.HemisphereLight(0xf7ead4, 0x4a6e38, 0.85);
   scene.add(hemi);
-  const sun = new THREE.DirectionalLight(0xffe2b0, 2.15);
-  sun.position.set(-9, 16, 8);
+  const sun = new THREE.DirectionalLight(0xffe2b0, 2.35);
+  sun.position.set(14, 13, 5);
   sun.castShadow = !reduced;
   sun.shadow.mapSize.set(reduced ? 512 : 1536, reduced ? 512 : 1536);
   sun.shadow.camera.near = 2;
@@ -142,7 +142,7 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   const loader = new THREE.TextureLoader();
   const coatCache = new Map<string, InstanceType<Three["Texture"]>>();
   const loadCoat = (id: string) => {
-    const url = COAT_TEXTURE[id as keyof typeof COAT_TEXTURE] ?? COAT_TEXTURE.jellie;
+    const url = COAT_TEXTURE[id as keyof typeof COAT_TEXTURE] ?? COAT_TEXTURE.red;
     const hit = coatCache.get(url);
     if (hit) return hit;
     const tex = loader.load(url);
@@ -164,8 +164,8 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     applyCatTexture(mcCat.material, loadCoat(state.coat), THREE);
   });
 
-  const appleGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-  const appleMat = new THREE.MeshLambertMaterial({ color: 0xb02e26 });
+  const appleGeo = new THREE.BoxGeometry(0.48, 0.48, 0.48);
+  const appleMat = new THREE.MeshLambertMaterial({ color: 0xd12a32 });
   const appleMesh = new THREE.InstancedMesh(appleGeo, appleMat, MAX_APPLES);
   appleMesh.castShadow = true;
   appleMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -223,13 +223,13 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
   let catVy = 0;
   let jumping = false;
   let dir: 1 | -1 = 1;
-  let yaw = Math.PI - 0.45 + Math.PI / 4;
+  let yaw = 2.72;
   let orbit = 0;
   let pointerX = 0;
   let pointerY = 0;
   const groundY = orchard.groundY;
 
-  const CAT_SCALE = 0.1;
+  const CAT_SCALE = 0.125;
   const HEAD_FWD = 9.2;
   const HEAD_UP = 8.6;
   // Standing model faces −Z at yaw 0.
@@ -513,20 +513,20 @@ function boot(canvas: HTMLCanvasElement, THREE: Three) {
     const sy = shake * 0.22 * Math.sin(t * 31.7);
     const sz = shake * 0.16 * Math.sin(t * 23.3);
 
-    if (!reduced) orbit += dt * 0.05;
-    // From the clearing, looking into the orchard — cat in front, apples in canopy.
-    const yawCam = 0.88 + Math.sin(orbit) * 0.05;
-    const radius = window.innerWidth < 700 ? 8.0 : 8.9;
-    const height = window.innerWidth < 700 ? 3.15 : 3.6;
-    const ox = Math.sin(yawCam) * radius + pointerX * 0.4;
-    const oz = Math.cos(yawCam) * radius + 1.35 + pointerY * 0.12;
+    if (!reduced) orbit += dt * 0.02;
+    // Banner lock: cat left, canopy right, apple in the air.
+    const yawCam = 1.08 + Math.sin(orbit) * 0.02;
+    const radius = window.innerWidth < 700 ? 5.6 : 6.4;
+    const height = window.innerWidth < 700 ? 2.25 : 2.5;
+    const ox = Math.sin(yawCam) * radius + 0.55 + pointerX * 0.22;
+    const oz = Math.cos(yawCam) * radius + 1.7 + pointerY * 0.08;
     camera.up.set(0, 1, 0);
     camera.position.set(
       ox + sx,
-      groundY + height + pointerY * -0.08 + sy,
+      groundY + height + pointerY * -0.05 + sy,
       oz + sz,
     );
-    look.set(-0.15, groundY + 2.4, -1.9);
+    look.set(0.55, groundY + 2.05, -0.85);
     camera.lookAt(look);
     camera.rotation.z = shake * 0.03 * Math.sin(t * 19.0);
 

@@ -244,7 +244,7 @@ export function getCoat(id: CoatId | null | undefined): Coat {
   return (id && BY_ID[id]) || BY_ID.red;
 }
 
-const STORAGE_KEY = "meowton-coat";
+const STORAGE_KEY = "meowton-coat-v2";
 
 export function readStoredCoat(): CoatId {
   try {
@@ -254,7 +254,7 @@ export function readStoredCoat(): CoatId {
   } catch {
     /* ignore */
   }
-  return "jellie";
+  return "red";
 }
 
 export function writeStoredCoat(id: CoatId) {
