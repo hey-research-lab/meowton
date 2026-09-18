@@ -56,6 +56,59 @@ function setMcUvs(
   attr.needsUpdate = true;
 }
 
+function voxel(
+  THREE: Three,
+  color: number,
+  w: number,
+  h: number,
+  d: number,
+  x: number,
+  y: number,
+  z: number,
+  parent: Group,
+  mats: Material[],
+) {
+  const geo = new THREE.BoxGeometry(w, h, d);
+  const mat = new THREE.MeshLambertMaterial({ color });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  parent.add(mesh);
+  mats.push(mat);
+  return mesh;
+}
+
+/** Isaac kit: powdered wig + rust coat, still cubes. */
+function dressNewton(THREE: Three, facing: Group, head: Group, mats: Material[]) {
+  const WIG = 0xf3eee3;
+  const CURL = 0xe6dfd2;
+  const COAT = 0x8c3d24;
+  const SKIRT = 0x6e2f19;
+  const VEST = 0x3d5640;
+  const CRAVAT = 0xf7f4ec;
+  const GOLD = 0xd4a43a;
+
+  voxel(THREE, WIG, 5.6, 2.2, 4.4, 0, 2.4, 0.3, head, mats);
+  voxel(THREE, CURL, 2.5, 4.4, 2.6, 3.15, 0.35, 0.55, head, mats);
+  voxel(THREE, CURL, 2.5, 4.4, 2.6, -3.15, 0.35, 0.55, head, mats);
+  voxel(THREE, WIG, 4.8, 3.8, 2.5, 0, 0.55, 2.7, head, mats);
+  voxel(THREE, CURL, 1.7, 3.5, 1.7, 2.7, -0.55, -1.55, head, mats);
+  voxel(THREE, CURL, 1.7, 3.5, 1.7, -2.7, -0.55, -1.55, head, mats);
+  voxel(THREE, CURL, 1.5, 2.2, 1.5, 3.5, 1.7, 1.9, head, mats);
+  voxel(THREE, CURL, 1.5, 2.2, 1.5, -3.5, 1.7, 1.9, head, mats);
+  voxel(THREE, WIG, 2.2, 1.6, 2.2, 0, 3.2, -0.4, head, mats);
+
+  voxel(THREE, COAT, 7.2, 5.0, 11.0, 0, 6.05, 0.5, facing, mats);
+  voxel(THREE, SKIRT, 7.4, 3.2, 6.2, 0, 4.35, 5.1, facing, mats);
+  voxel(THREE, COAT, 2.2, 3.2, 3.4, 4.3, 6.15, -3.1, facing, mats);
+  voxel(THREE, COAT, 2.2, 3.2, 3.4, -4.3, 6.15, -3.1, facing, mats);
+  voxel(THREE, VEST, 4.0, 3.4, 2.0, 0, 6.15, -5.5, facing, mats);
+  voxel(THREE, CRAVAT, 3.2, 2.6, 1.5, 0, 7.45, -7.15, facing, mats);
+  voxel(THREE, CRAVAT, 2.2, 1.5, 1.2, 0, 6.55, -7.55, facing, mats);
+  voxel(THREE, GOLD, 0.7, 0.9, 0.45, 0.85, 6.35, -6.45, facing, mats);
+}
+
 function mcBox(
   THREE: Three,
   mat: Material,
@@ -213,6 +266,9 @@ export function buildMcCat(THREE: Three, texture: Texture): McCat {
   frontR.add(frontRMesh);
   facing.add(frontR);
 
+  const kit: Material[] = [];
+  dressNewton(THREE, facing, head, kit);
+
   return {
     root,
     material,
@@ -224,6 +280,7 @@ export function buildMcCat(THREE: Three, texture: Texture): McCat {
         if (mesh.geometry) mesh.geometry.dispose();
       });
       material.dispose();
+      for (const m of kit) m.dispose();
     },
   };
 }
