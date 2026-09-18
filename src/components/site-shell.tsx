@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ConnectButton } from "@/components/connect-button";
+import { CatPicker } from "@/components/cat-picker";
 import { LegalFoot } from "@/components/legal-foot";
 import { OrchardScene } from "@/components/orchard-scene";
 import { requestOrchardTap, useNewton } from "@/lib/newton";
